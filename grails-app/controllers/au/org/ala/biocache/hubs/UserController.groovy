@@ -46,7 +46,12 @@ class UserController {
     }
 
     def get(String type) {
-        def userId = authService.getUserId()
+        def userId
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            userId = 13307 // RR test ***
+        } else {
+            userId = authService.getUserId()
+        }
 
         if (!userId) {
             render status: 403

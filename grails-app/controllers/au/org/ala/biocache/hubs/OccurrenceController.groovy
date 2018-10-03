@@ -23,6 +23,8 @@ import org.grails.web.json.JSONElement
 import org.grails.web.json.JSONObject
 import au.org.ala.web.CASRoles
 
+import javax.servlet.http.Cookie // RR
+
 import java.text.SimpleDateFormat
 
 /**
@@ -207,9 +209,18 @@ class OccurrenceController {
      * @return
      */
     def show(String id) {
-
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            def cookie = new Cookie("ALA-Auth", "r.roberts@nbn.org.uk") // RR test ***
+            response.addCookie(cookie)
+            request.cookies.each { println "${it.name} == ${it.value}, domain = ${it.domain}" }
+        }
         try {
-            String userId = authService?.getUserId()
+            String userId = ''
+            if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+                userId = "13307" // RR test ****
+            } else {
+                userId = authService?.getUserId()
+            }
             Boolean hasClubView = request.isUserInRole("${grailsApplication.config.clubRoleForHub}")
             JSONObject record = webServicesService.getRecord(id, hasClubView)
             log.debug "hasClubView = ${hasClubView} || ${grailsApplication.config.clubRoleForHub}"
@@ -231,10 +242,19 @@ class OccurrenceController {
                         log.warn("Problem retrieving contact details for ${record.raw.attribution.dataResourceUid} - " + e.getMessage())
                     }
                 }
-
-                String userEmail = authService?.getEmail()
+                String userEmail = ''
+                if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+                    userEmail = "r.roberts@nbn.org.uk" // RR test ***
+                } else {
+                    userEmail = authService?.getEmail()
+                }
                 Boolean isCollectionAdmin = false
-                Boolean userHasRoleAdmin = authService?.userInRole(CASRoles.ROLE_ADMIN)
+                Boolean userHasRoleAdmin = false
+                if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+                    userHasRoleAdmin = true // RR test ***
+                } else {
+                    userHasRoleAdmin = authService?.userInRole(CASRoles.ROLE_ADMIN)
+                }
 
                 if (userHasRoleAdmin) {
                   isCollectionAdmin = true
@@ -252,7 +272,7 @@ class OccurrenceController {
                         webServicesService.getUserAssertions(id),
                         webServicesService.getQueryAssertions(id),
                         userId)
-
+                log.info("grouped assertions *** = " + groupedAssertions.toString())
                 Map layersMetaData = webServicesService.getLayersMetaData()
                 compareRecord = postProcessingService.augmentRecord(compareRecord) // adds some links to certain fields, etc
 

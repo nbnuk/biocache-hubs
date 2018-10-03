@@ -187,6 +187,15 @@
     <g:if test="${record.processed.occurrence[recordedByField] && record.raw.occurrence[recordedByField] && record.processed.occurrence[recordedByField] == record.raw.occurrence[recordedByField]}">
             ${proRecordedBy}
     </g:if>
+    %{-- NBN: see raw names for preference --}%
+    <g:elseif test="${record.raw.occurrence[recordedByField]}">
+        ${rawRecordedBy}
+    </g:elseif>
+    <g:elseif test="${record.processed.occurrence[recordedByField]}">
+        ${proRecordedBy}
+    </g:elseif>
+
+    %{--
     <g:elseif test="${record.processed.occurrence[recordedByField] && record.raw.occurrence[recordedByField]}">
         ${proRecordedBy}
         <g:if test="${proRecordedBy != rawRecordedBy}">
@@ -199,6 +208,7 @@
     <g:elseif test="${record.raw.occurrence[recordedByField]}">
         ${rawRecordedBy}
     </g:elseif>
+    --}%
 </alatag:occurrenceTableRow>
 <!-- ALA user id -->
 <g:if test="${record.raw.occurrence.userId}">

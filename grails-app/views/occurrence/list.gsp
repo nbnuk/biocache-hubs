@@ -438,7 +438,7 @@
 
                             <div id="sortWidgets" class="col-sm-8 col-md-8">
                                 <span class="hidden-sm"><g:message code="list.sortwidgets.span01"
-                                                                      default="per"/></span><g:message
+                                                                      default="per"/></span> <g:message
                                     code="list.sortwidgets.span02" default="page"/>:
                                 <select id="per-page" name="per-page" class="input-small">
                                     <g:set var="pageSizeVar" value="${params.pageSize ?: params.max ?: "20"}"/>

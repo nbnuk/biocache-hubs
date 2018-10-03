@@ -122,7 +122,7 @@
                 </div>
                 <div class="centre">
                     <h1>
-                        <g:message code="show.headingbar01.title" default="Occurrence record"/>
+                        <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i><g:message code="show.headingbar01.title" default="Occurrence record"/>
                         <span id="recordId">${recordId}</span>
                     </h1>
                     <g:if test="${record.raw.classification}">

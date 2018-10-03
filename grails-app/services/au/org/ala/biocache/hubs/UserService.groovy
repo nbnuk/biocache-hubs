@@ -11,9 +11,12 @@ class UserService {
      * @param userid The ALA userid to lookup
      */
     def detailsForUserId(String userid) {
-        if (!userid) return [displayName: '', email: '']
-        else if ('system' == userid) return [displayName: userid, email: userid]
-
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            if (!userid) return [displayName: 'Reuben Roberts', email: 'r.roberts@nbn.org.uk'] // RR test ***
+        } else {
+            if (!userid) return [displayName: '', email: '']
+            else if ('system' == userid) return [displayName: userid, email: userid]
+        }
         UserDetails details = null
 
         try {

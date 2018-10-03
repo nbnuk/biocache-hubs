@@ -628,9 +628,26 @@ class OccurrenceTagLib {
                         outputResultsLabel('year', alatag.message(code:"record.year.label"), occurrence.year, true)
                     }
                     if (occurrence.stateProvince) {
-                        outputResultsLabel('state', alatag.message(code:"record.state.label"), alatag.message(code:occurrence.stateProvince), true)
+                        mkp.yieldUnescaped(occurrence.stateProvince)
+                        //outputResultsLabel('state', alatag.message(code:"record.state.label"), alatag.message(code:occurrence.stateProvince), true)
                     } else if (occurrence.country) {
                         outputResultsLabel('country', alatag.message(code:"record.country.label"), alatag.message(code:occurrence.country), true)
+                    }
+                }
+
+                span(class:'gridReference') {
+                    if (occurrence.gridReference) {
+                        outputResultsLabel("osgr", "OSGR", occurrence.gridReference, true)
+                    }
+                }
+
+                span(class:'openAssertions') {
+                    def user_assert = occurrence.hasUserAssertions?:"0"
+                    if (user_assert != "0") {
+                        log.info("user_assert for:" + occurrence.toString())
+                    }
+                    if (user_assert == "50005" || user_assert == "50001") { //only flag open or uncorrected issues
+                        mkp.yieldUnescaped("<i class='glyphicon glyphicon-flag' style='color:red;display:inline-block'></i>")
                     }
                 }
 
@@ -709,21 +726,33 @@ class OccurrenceTagLib {
      * Display the logged in user (user id)
      */
     def loggedInUserId = { attrs ->
-        out << authService?.userId
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            out << "13307" // RR test ***
+        } else {
+            out << authService?.userId
+        }
     }
 
     /**
      * Display the logged in user (display name)
      */
     def loggedInUserDisplayname = { attrs ->
-        out << (authService?.displayName?:authService?.email)
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            out << "Reuben Roberts:r.roberts@nbn.org.uk" // RR test ***
+        } else {
+            out << (authService?.displayName ?: authService?.email)
+        }
     }
 
     /**
      * Display the logged in user (email)
      */
     def loggedInUserEmail = { attrs ->
-        out << authService?.email
+        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
+            out << "r.roberts@nbn.org.uk" // RR test ***
+        } else {
+            out << authService?.email
+        }
     }
 
     /**

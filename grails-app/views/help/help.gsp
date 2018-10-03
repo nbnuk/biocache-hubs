@@ -161,15 +161,15 @@ separate line in the query box. Catalogue numbers must be formatted exactly as t
     The <span class="feature">Shapefile search</span> allows you to upload an ESRI shapefile and perform a polygon search. Please note that a search is performed only on the first polygon
 encountered in the shapefile. You will need a tool like OGR Info to find out which polygon is on top. There is also a good chance that the area of interest
 consists of more than one polygon in the shapefile. A more comprehensive polygon search can be found in the
-    <a href="http://spatial.ala.org.au/">ALA spatial portal</a>.
+    <a href="http://spatial.nbnatlas.org/">NBN spatial portal</a>.
 </p>
 <h3>
     Auto-complete suggestions
 </h3>
 <p>
     In the <span class="feature">Quick search</span> and the <span class="feature">Taxon name</span> input in the <span class="feature">Advanced search</span>, when you start typing, a drop-down list with suggestions for taxon names will appear.
-These names come from the ALA name list and, although they are only names of plants, fungi and algae, do not necessarily correspond with names in ${shortName}. The
-correspondence between names on the ALA name list and names in ${shortName} will improve when the National Species Lists have been completed.
+These names come from the NBN name list and, although they are only names of plants, fungi and algae, do not necessarily correspond with names in ${shortName}. The
+correspondence between names on the NBN name list and names in ${shortName} will improve when the National Species Lists have been completed.
 </p>
 <h2>
     Results
@@ -243,7 +243,7 @@ available data for that record.
     />
 </div>
 <p>
-    The column labels in the CSV export are shared with other ALA applications and are not always the same as elsewhere
+    The column labels in the CSV export are shared with other NBN Atlas applications and are not always the same as elsewhere
     in ${shortName}. A table with the column names in the CSV output and their equivalents in ${shortName} can be found in the
     <a href="downloadfields.html">Download fields</a> page.
 </p>
@@ -257,19 +257,19 @@ available data for that record.
 <div class="screenshot">
     <img
             src="${request.contextPath}/static/images/help/screenshot_alerts.jpg"
-            alt="Screen capture ALA alert e-mails"
+            alt="Screen capture NBN alert e-mails"
             width="258"
             height="176"
     />
 </div>
 <p>
     You can choose to receive alerts on a monthly, weekly, daily or hourly basis. In addition to alerts that relate to your search, you can choose to receive
-    alerts when new records, annotations or images of any kind are added to the ALA.
+    alerts when new records, annotations or images of any kind are added to the NBN.
 </p>
 <div class="screenshot">
     <img
             src="${request.contextPath}/static/images/help/screenshot_alert_page.jpg"
-            alt="Screen capture ALA alert page"
+            alt="Screen capture NBN alert page"
             width="617"
             height="151"
     />
@@ -338,10 +338,8 @@ available data for that record.
     View in Spatial portal
 </h4>
 <p>
-    Clicking on the 'View in Spatial Portal' button will open your result set in the ALA Spatial Portal. The Spatial portal has a wide range of tools for
-    performing detailed spatial analysis of your query results (you can also upload your own data set for analysis). A
-    <a href="https://www.ala.org.au/spatial-portal-help/getting-started/">guide for using the spatial analysis tools</a>
-    is available on the ALA website.
+    Clicking on the 'View in Spatial Portal' button will open your result set in the NBN Spatial Portal. The Spatial portal has a wide range of tools for
+    performing detailed spatial analysis of your query results (you can also upload your own data set for analysis).
 </p>
 <h4>
     Download map
@@ -370,13 +368,13 @@ pie chart or a bar in a bar graph. Clicking on a segment in the pie chart for Ta
 </h2>
 <p>
     The <span class="feature">Record detail</span> page displays comprehensive specimen data for a single record. The content of the different fields is described on the Data
-page. Date loaded (which appears under the location map) indicates the date the record was provided to the ALA BioCache. Date loaded will change if the
+page. Date loaded (which appears under the location map) indicates the date the record was provided to the NBN BioCache. Date loaded will change if the
 specimen record has been edited at the source institution. The Date last processed indicates the date that the record was last changed within the ALA
 BioCache. This may happen, for instance, when there is a change in the backbone taxonomy or the Sensitive Data Service, or when new environmental layers
 are loaded, and thus doesn't represent any change to the specimen data held by the source institution.
 </p>
 <p>
-    Note that any common names listed after the taxon name at the top of the page come from the name lists used by ALA and are not provided with the records.
+    Note that any common names listed after the taxon name at the top of the page come from the name lists used by NBN and are not provided with the records.
 </p>
 <p>
     In addition to the specimen data from the herbaria, you can view additional political boundaries and extensive environmental sampling
@@ -386,7 +384,7 @@ are loaded, and thus doesn't represent any change to the specimen data held by t
     Data validation issues
 </h3>
 <p>
-    When ${shortName} data is uploaded into the ALA BioCache, a range of quality assurance checks are performed and potential data issues are flagged. A summary of the
+    When ${shortName} data is uploaded into the NBN BioCache, a range of quality assurance checks are performed and potential data issues are flagged. A summary of the
     data issues is listed on the <span class="feature">Record detail</span> page under the <span class="feature">Data validation issues</span> heading.
 The <a href="data.html#data_issues"><span class="feature">Data issues</span></a> section of the <span class="feature">Data</span> page describes the validation issues associated
 with ${shortName} data.

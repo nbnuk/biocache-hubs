@@ -26,9 +26,10 @@ class UserDataService {
     def get(userId, type) {
 
         def data = [:]
-
         if (userId && grailsApplication.config.userdetails.baseUrl) {
             try {
+                log.info("getting details for: " + grailsApplication.config.userdetails.baseUrl + '/property/getProperty' +
+                        "?alaId=${userId}&name=${URLEncoder.encode(NAME_PREFIX + type, "UTF-8")}") // RR test ***
                 def resp = webService.get(grailsApplication.config.userdetails.baseUrl + '/property/getProperty' +
                         "?alaId=${userId}&name=${URLEncoder.encode(NAME_PREFIX + type, "UTF-8")}")
 

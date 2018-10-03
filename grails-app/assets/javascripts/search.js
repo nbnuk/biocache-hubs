@@ -1173,7 +1173,7 @@ function loadSpeciesInTab(start, sortField, group) {
 
                 if (md.type == 'species') {
                     link = BC_CONF.bieWebappUrl + "/species/"  + md.guid;
-                    linkTitle = "Go to ALA species page";
+                    linkTitle = "Go to NBN species page";
                     rank = " ";
                     count = " <br/>Record count: " + md.count;
                 } else {

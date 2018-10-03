@@ -25,7 +25,7 @@
         <g:if test="${record.sounds}">
             <li><a href="#soundsHeader"><g:message code="show.soundsheader.title" default="Sounds"/></a></li>
         </g:if>
-        <li><a href="#userAnnotationsDiv" id="userAnnotationsNav" style="display:none;"><g:message code="show.userannotationsdiv.title" default="User flagged issues"/></a></li>
+        <li><a href="#userAnnotationsDiv" id="userAnnotationsNav" style="display:none;"><g:message code="show.userannotationsdiv.title" default="User flagged issues"/>&nbsp;<i id="userAnnotationsNavFlag" class="glyphicon glyphicon-flag" style="color:red;display:none"></i></a></li>
         <g:if test="${record.systemAssertions && record.processed.attribution.provenance != 'Draft'}">
             <li><a href="#dataQuality"><g:message code="show.dataquality.title" default="Data quality tests"/>
             (${record.systemAssertions.failed?.size()?:0} <i class="fa fa-times-circle tooltips" style="color:red;" title="<g:message code="assertions.failed" default="failed"/>"></i>,
@@ -292,7 +292,8 @@
                 <h3 id="loginOrFlagLabel"><g:message code="show.loginorflag.title" default="Flag an issue"/></h3>
             </div>
             <div class="modal-body">
-                <g:if test="${!userId}">
+                <g:if test="${!userId && (grailsApplication.config.localhost?.fakeuser?:'' != 'true')}">
+
                     <div style="margin: 20px 0;"><g:message code="show.loginorflag.div01.label" default="Login please:"/>
                         <a href="${grailsApplication.config.security.cas.casServerLoginUrl}?service=${serverName}${request.contextPath}/occurrences/${record.raw.rowKey}"><g:message code="show.loginorflag.div01.navigator" default="Click here"/></a>
                     </div>

@@ -45,6 +45,24 @@
     </div>
 
     <div class="form-group">
+        <label class="col-md-2 control-label" for="identification_verification_status"><g:message code="advancedsearch.table11col01.title" default="ID verification status"/></label>
+        <div class="col-md-6">
+            <select class="identification_verification_status form-control" name="identification_verification_status" id="identification_verification_status">
+                <option value=""><g:message code="advancedsearch.table11col01.option.label" default="-- select verification level --"/></option>
+                <option value='("Accepted" OR "Accepted - correct" OR "Accepted - considered correct" OR "verified")'>[All accepted levels]</option>
+                <option value='("Unconfirmed" OR "Unconfirmed - plausible" OR "Unconfirmed - unreviewed")'>[All unconfirmed levels]</option>
+                <g:each var="group" in="${request.getAttribute("identification_verification_status").sort()}">
+                    <g:if test="${group.value}">
+                        <option value="${group.key}">${group.value}</option>
+                    </g:if>
+                </g:each>
+            </select>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
         <label class="col-md-2 control-label" for="institution_collection"><g:message code="advancedsearch.table05col01.title" default="Institution or Collection"/></label>
         <div class="col-md-6">
             <select class="institution_uid collection_uid form-control" name="institution_collection" id="institution_collection">
