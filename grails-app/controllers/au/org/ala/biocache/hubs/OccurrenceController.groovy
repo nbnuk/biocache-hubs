@@ -275,7 +275,7 @@ class OccurrenceController {
                 log.info("grouped assertions *** = " + groupedAssertions.toString())
                 Map layersMetaData = webServicesService.getLayersMetaData()
                 compareRecord = postProcessingService.augmentRecord(compareRecord) // adds some links to certain fields, etc
-
+                log.info("error codes = " + webServicesService.getErrorCodes())
                 [
                         record: record,
                         uuid: id,
@@ -294,7 +294,8 @@ class OccurrenceController {
                         metadataForOutlierLayers: postProcessingService.getMetadataForOutlierLayers(record, layersMetaData),
                         environmentalSampleInfo: postProcessingService.getLayerSampleInfo(ENVIRO_LAYER, record, layersMetaData),
                         contextualSampleInfo: postProcessingService.getLayerSampleInfo(CONTEXT_LAYER, record, layersMetaData),
-                        skin: grailsApplication.config.skin.layout
+                        skin: grailsApplication.config.skin.layout,
+                        showFlaggedIssues: (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()
                 ]
             } else {
                 flash.message = "No record found with id: ${id}"

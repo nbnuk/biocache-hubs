@@ -260,13 +260,16 @@ $(document).ready(function() {
  */
 function deleteAssertion(recordUuid, assertionUuid){
     //alert("record uuid = " + recordUuid + ", assertion uuid = " + assertionUuid);
-
+    //console.log("Deleting assertion: record uuid = " + recordUuid + ", assertion uuid = " + assertionUuid);
     $.post(OCC_REC.contextPath + '/occurrences/assertions/delete',
         { recordUuid: recordUuid, assertionUuid: assertionUuid },
         function(data) {
+            //console.log("delete assertion: " + data);
             refreshUserAnnotations();
         }
-    );
+    ).error(function () {
+        console.log("Error deleting assertion");
+    });
 }
 
 /**
@@ -294,6 +297,11 @@ function getMessage(userAssertionCode) {
  * Load and display the assertions for this record
  */
 function refreshUserAnnotations(){
+
+    if (!showFlaggedIssues) {
+        $('#userAnnotationsDiv').hide('fast');
+        return;
+    }
     //console.log(OCC_REC.contextPath + "/assertions/" + OCC_REC.recordUuid);
     $.get( OCC_REC.contextPath + "/assertions/" + OCC_REC.recordUuid, function(data) {
 
@@ -447,6 +455,7 @@ function updateDeleteVerificationEvents(relatedAssertionId) {
         e.preventDefault();
         var isConfirmed = confirm('Are you sure you want to delete this verification ?');
         if (isConfirmed === true) {
+            console.log("working...");
             deleteAssertion(OCC_REC.recordUuid, this.parentElement.parentElement.id.split('_').pop());
         }
     });
@@ -543,6 +552,7 @@ function updateConfirmVerificationEvents(occUuid, assertionUuid, userDisplayName
                 userDisplayName: userDisplayName},
             function(data) {
                 // service simply returns status or OK or FORBIDDEN, so assume it worked...
+                console.log(data);
                 $(".verifyAsk").fadeOut();
                 $(".verifyDone").fadeIn();
                 refreshUserAnnotations();

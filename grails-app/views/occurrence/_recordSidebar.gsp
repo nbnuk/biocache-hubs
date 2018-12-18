@@ -1,4 +1,4 @@
-<g:if test="${isUnderCas && !isReadOnly && record.processed.attribution.provenance != 'Draft'}">
+<g:if test="${isUnderCas && !isReadOnly && record.processed.attribution.provenance != 'Draft' && (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()}">
     <button class="btn btn-default" id="assertionButton" href="#loginOrFlag" role="button" data-toggle="modal" title="report a problem or suggest a correction for this record">
         <span id="loginOrFlagSpan" title="Flag an issue" class=""><i class="glyphicon glyphicon-flag"></i> <g:message code="show.button.assertionbutton.span" default="Flag an issue"/></span>
     </button>
@@ -123,7 +123,7 @@
                     </g:each>
                 </div>
 
-                <div id="userAssertionsContainer" <g:if test="${!record.userAssertions && !queryAssertions}">style="display:none"</g:if>>
+                <div id="userAssertionsContainer" <g:if test="${(!record.userAssertions && !queryAssertions) || !(grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()}">style="display:none"</g:if>>
                     <h3><g:message code="show.userassertionscontainer.title" default="User flagged issues"/></h3>
                     <ul id="userAssertions">
                         <!--<p class="half-padding-bottom">Users have highlighted the following possible issues:</p>-->

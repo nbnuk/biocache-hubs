@@ -64,6 +64,8 @@
         if(!OCC_REC.hasGoogleKey) {
             google.load('maps', '3.3', {other_params: "sensor=false"});
         }
+
+        var showFlaggedIssues = ${showFlaggedIssues}
         //google.load("visualization", "1", {packages:["corechart"]});
 
     </script>

@@ -248,12 +248,21 @@
                     </div>
                 </g:if>
                 <g:if test="${grailsApplication.config.useDownloadPlugin?.toBoolean()}">
+                    <g:set var="maxDownloadExceeded" value="${grailsApplication.config.maxDownloadRecords && Integer.parseInt(grailsApplication.config.maxDownloadRecords) < sr.totalRecords}"/>
+
                     <div id="downloads" class="btn btn-primary pull-right">
-                        <a href="${g.createLink(uri: '/download')}?searchParams=${sr?.urlParameters?.encodeAsURL()}&targetUri=${(request.forwardURI)}&totalRecords=${sr.totalRecords}"
-                           class="tooltips newDownload"
-                           title="Download all ${g.formatNumber(number: sr.totalRecords, format: "#,###,###")} records"><i
-                                class="fa fa-download"></i>
-                            &nbsp;&nbsp;<g:message code="list.downloads.navigator" default="Download"/></a>
+                        <g:if test="${maxDownloadExceeded}">
+                            <a href="javascript:void(0)"
+                               class="tooltips newDownload"
+                               title="Maximum records that can be downloaded is ${g.formatNumber(number: grailsApplication.config.maxDownloadRecords, format: "#,###,###")}. Please apply filters before downloading.">
+                        </g:if>
+                        <g:else>
+                            <a href="${g.createLink(uri: '/download')}?searchParams=${sr?.urlParameters?.encodeAsURL()}&targetUri=${(request.forwardURI)}&totalRecords=${sr.totalRecords}"
+                               class="tooltips newDownload"
+                               title="Download all ${g.formatNumber(number: sr.totalRecords, format: "#,###,###")} records">
+                        </g:else>
+                        <i class="fa fa-download"></i>
+                    &nbsp;&nbsp;<g:message code="list.downloads.navigator" default="Download"/></a>
                     </div>
                 </g:if>
                 <div id="resultsReturned">
