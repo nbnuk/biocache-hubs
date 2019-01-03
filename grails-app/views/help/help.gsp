@@ -48,8 +48,8 @@
     sensitive for conservation or biosecurity reasons, is accessible to everyone. We do, however, encourage all users to register, as registration makes some
     extra features available. You need to be logged in to report an issue with an ${shortName} record and to sign up for e-mail alerts. Also, ${shortName} remembers some of your
     preferences during your session and, if you log in, stores a cookie on your machine, so your session lasts until the cookie expires or is deleted.
-    Registrations for ${shortName} are no longer vetted. ${shortName} is part of the Atlas of Living Australia (ALA), so if you already have an ALA user account, you don't need
-    to register separately for ${shortName}, but can log in using your ALA account details.
+    Registrations for ${shortName} are no longer vetted. ${shortName} is part of the NBN Atlas, so if you already have an NBN user account, you don't need
+    to register separately for ${shortName}, but can log in using your NBN account details.
 </p>
 <h2>
     Search

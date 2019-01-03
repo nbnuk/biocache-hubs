@@ -787,7 +787,8 @@
         var mapQuery = MAP_VAR.query.replace(/&(?:lat|lon|radius)\=[\-\.0-9]+/g, ''); // remove existing lat/lon/radius/wkt params
         MAP_VAR.map.spin(true);
 
-        if(colourSelect == "variablegrid" || colourSelect == "singlegrid" || colourSelect == "10kgrid"){
+        if(colourBySelect == "variablegrid" || colourBySelect == "singlegrid" || colourBySelect == "10kgrid"){
+        //    if(colourSelect == "variablegrid" || colourSelect == "singlegrid" || colourSelect == "10kgrid"){
 
         //change the call depending on which layer is active....
         $.ajax({

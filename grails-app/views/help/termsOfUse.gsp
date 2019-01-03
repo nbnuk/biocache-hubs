@@ -48,8 +48,8 @@
 
     <br/>
     <p>The use of ${fullName} is subject to the terms of use outlined below. ${fullName}
-    forms part of the <a href="https://www.ala.org.au/">Atlas of Living Australia</a> (ALA); see the
-        <a href="https://www.ala.org.au/about-the-atlas/terms-of-use/#cy">ALA Terms of Use</a> for additional information.
+    forms part of the <a href="https://nbnatlas.org/">NBN Atlas</a> (ALA); see the
+        <a href="https://docs.nbnatlas.org/nbn-atlas-terms-of-use/">NBN Terms of Use</a> for additional information.
     </p>
     <h2>Copyright
     </h2>
@@ -121,12 +121,12 @@
     </p>
     <p>
         In order to use certain features available on the ${shortName} website, you must register as a user with
-        the Atlas of Living Australia (ALA). When registering, a genuine e-mail address must be provided.
+        the NBN Atlas. When registering, a genuine e-mail address must be provided.
     </p>
     <p>
         In some cases, you may be asked to provide your real name or other identifying or contact details
-    &ndash; such personal information will be managed in accordance with the ALA
-        <a href="https://www.ala.org.au/about-the-atlas/terms-of-use/privacy-policy/">Privacy Policy</a>.
+    &ndash; such personal information will be managed in accordance with the NBN
+        <a href="https://docs.nbnatlas.org/privacy-policy/">Privacy Policy</a>.
     </p>
     <p>&nbsp;</p>
 
