@@ -534,6 +534,26 @@ function geocodeAddress(reverseGeocode) {
     var address = $('input#address').val();
     var latLng = null;
 
+    //is it an OS Grid reference??
+    $.ajax({
+        dataType: "json",
+        url: EYA_CONF.biocacheServiceUrl + "/osgrid/lookup.json",
+        data: { q: address },
+        async:false,
+        success: function(data) {
+            if(data.valid){
+                if (data.decimalLatitude && data.decimalLongitude) {
+                    latLng = new google.maps.LatLng(data.decimalLatitude, data.decimalLongitude);
+                    updateMarkerAddress("GPS coordinates: " + data.decimalLatitude + ", " + data.decimalLongitude);
+                    updateMarkerPosition(latLng);
+                    // reload map pin, etc
+                    initialize();
+                    loadRecordsLayer();
+                }
+            }
+        }
+    });
+
     // Check if input contains a comma and try and patch coordinates
     if (address && address.indexOf(",") > -1 && magellan) {
         var parts = address.split(",");
