@@ -38,7 +38,7 @@
                             <option disabled role="separator">————————————</option>
                         </optgroup>
                         <optgroup label="Display as points">
-                            <option value=""><g:message code="map.maplayercontrols.tr01td01.option01" default="Points - default colour"/></option>
+                            <option value="" ${(defaultColourBy == 'basis_of_record')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option01" default="Points - default colour"/></option>
 
                             <g:each var="facetResult" in="${facets}">
                                 <g:set var="Defaultselected">

@@ -182,7 +182,7 @@
             <!-- facet column -->
             <div class="col-md-3 col-sm-3">
                 <!-- Trigger the modal with a button -->
-                <a class="btn tooltips btn-default btn-sm" data-toggle="modal" data-target="#facetConfigDialog" href="#"
+                <a class="btn tooltips btn-default btn-sm btn-primary" data-toggle="modal" data-target="#facetConfigDialog" href="#"
                    title="Customise the contents of this column">
                     <i class="fa fa-cog"></i>&nbsp;&nbsp;<g:message code="search.filter.customise"/>
                 </a>
@@ -271,6 +271,7 @@
                                                                     format="#,###,###"/></strong> <g:message
                             code="list.resultsretuened.span.returnedtext" default="results for"/></span>
                     <span class="queryDisplay"><strong>${raw(queryDisplay)}</strong></span>&nbsp;&nbsp;
+                    <span style="font-style:italic;display:block">Some of the displayed records may not be available for commercial use. Please check the licence conditions and non-commercial use guidance <a href="${grailsApplication.config.downloads?.termsOfUseUrl?:""}">here</a></span>
                     %{--<g:set var="hasFq" value="${false}"/>--}%
                     <g:if test="${sr.activeFacetMap?.size() > 0 || params.wkt || params.radius}">
                         <div class="activeFilters">
@@ -338,8 +339,10 @@
                         </div>
                     </div>
                 </div>
+
             </div><!-- /.col-md-9 -->
         </div><!-- /#searchInfoRow -->
+
         <!--  Second row - facet column and results column -->
         <div class="row" id="content">
             <div class="col-sm-3 col-md-3">
