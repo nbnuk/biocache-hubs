@@ -38,12 +38,14 @@ var geocoder, map, marker, circle, markerInfowindow, lastInfoWindow, taxon, taxo
 var points = [], infoWindows = [], speciesGroup = "ALL_SPECIES";
 var zoomForRadius = {
     1000: 14,
+    2000: 13,
     5000: 12,
     10000: 11
 };
 var radiusForZoom = {
     11: 10,
     12: 5,
+    13: 2,
     14: 1
 };
 

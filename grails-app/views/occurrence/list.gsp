@@ -181,8 +181,8 @@
         <div class="clearfix row" id="searchInfoRow">
             <!-- facet column -->
             <div class="col-md-3 col-sm-3">
-                <!-- Trigger the modal with a button -->
-                <a class="btn tooltips btn-default btn-sm btn-primary" data-toggle="modal" data-target="#facetConfigDialog" href="#"
+                <!-- Trigger the modal with a button was styled btn-default btn-sm -->
+                <a class="btn tooltips btn-primary" data-toggle="modal" data-target="#facetConfigDialog" href="#"
                    title="Customise the contents of this column">
                     <i class="fa fa-cog"></i>&nbsp;&nbsp;<g:message code="search.filter.customise"/>
                 </a>
