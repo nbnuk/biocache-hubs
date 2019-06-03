@@ -851,7 +851,8 @@ function populateSpeciesGroups(data) {
         var label = group;
         if (group == "ALL_SPECIES") label = "all.species";
         var rc = (group == speciesGroup) ? " class='activeRow'" : ""; // highlight active group
-        var h = "<tr"+rc+" title='click to view group on map'><td class='indent"+indent+"'><a href='#' id='"+group+"' class='taxonBrowse' title='click to view group on map'>"+jQuery.i18n.prop(label, label)+"</a></td><td>"+count+"</td></tr>";
+        var labelNoSpaces = label.replace(/\s/g, '');
+        var h = "<tr"+rc+" title='click to view group on map'><td class='indent"+indent+"'><a href='#' id='"+group+"' class='taxonBrowse' title='click to view group on map'>"+jQuery.i18n.prop(labelNoSpaces, label)+"</a></td><td>"+count+"</td></tr>";
         $("#taxa-level-0 tbody").append(h);
     }
 }

@@ -763,6 +763,7 @@
                                     <option value="50001"><alatag:message code="user_assertions.50001" default="Open issue"/></option>
                                     <option value="50002"><alatag:message code="user_assertions.50002" default="Verified"/></option>
                                     <option value="50003"><alatag:message code="user_assertions.50003" default="Corrected"/></option>
+                                    <option value="50006"><alatag:message code="user_assertions.50006" default="To delete"/></option>
                                 </select>
                             </p>
                             <p><textarea id="verifyComment" rows="3" style="width: 90%"></textarea></p><br>
