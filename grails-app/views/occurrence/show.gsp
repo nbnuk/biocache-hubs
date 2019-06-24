@@ -57,7 +57,8 @@
                    status="s">'${sds}': '${grailsApplication.config.sensitiveDatasets[sds]}'${s < (sensitiveDatasets.size() - 1) ? ',' : ''}
                 </g:each>
             },
-            hasGoogleKey: ${grailsApplication.config.google.apikey as Boolean}
+            hasGoogleKey: ${grailsApplication.config.google.apikey as Boolean},
+            isCollectionAdmin: ${isCollectionAdmin}
         }
 
         // Google charts

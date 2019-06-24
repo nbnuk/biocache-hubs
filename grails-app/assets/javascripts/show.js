@@ -385,7 +385,9 @@ function refreshUserAnnotations(){
                 }
 
                 //if the current user is the author of the annotation, they can delete
-                if(OCC_REC.userId == userAssertion.userId){
+                //new: the collection admin can also delete
+                console.log(OCC_REC);
+                if((OCC_REC.userId == userAssertion.userId) || OCC_REC.isCollectionAdmin){
                     $clone.find('.deleteAnnotation').css({display:'block'});
                     $clone.find('.deleteAnnotation').attr('id', userAssertion.uuid);
                 } else {
