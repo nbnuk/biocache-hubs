@@ -423,7 +423,7 @@ $(document).ready(function() {
     $("#downloadFacet").live("click", function(e) {
         var facetName = $("table#fullFacets").data("facet");
         //console.log('clicked ' + window.location.href );
-        window.location.href = BC_CONF.biocacheServiceUrl + "/occurrences/facets/download" + BC_CONF.facetDownloadQuery + '&facets=' + facetName + '&count=true&lookup=true';
+        window.location.href = BC_CONF.biocacheServiceUrl + "/occurrences/facets/download" + BC_CONF.searchString + '&facets=' + facetName + '&count=true&lookup=true';
     });
 
     // form validation for form#facetRefineForm
@@ -659,12 +659,35 @@ $(document).ready(function() {
 }); // end JQuery document ready
 
 /**
+ * get URL parameter - works when parameter includes semi-colons which can otherwise indicate a delimiter similar to &
+ * @param sParam
+ * @returns {*}
+ */
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
+
+/**
  * Catch sort drop-down and build GET URL manually
  */
 function reloadWithParam(paramName, paramValue) {
     var paramList = [];
-    var q = $.url().param('q'); //$.query.get('q')[0];
-    var fqList = $.url().param('fq'); //$.query.get('fq');
+    //var q = $.url().param('q'); //$.query.get('q')[0];
+    //var fqList = $.url().param('fq'); //$.query.get('fq');
+    var q = getUrlParameter('q');
+    var fqList = getUrlParameter('fq'); //fix issue where this includes semi-colons ; which are interpreted as param separator
+
     var sort = $.url().param('sort');
     var dir = $.url().param('dir');
     var wkt = $.url().param('wkt');

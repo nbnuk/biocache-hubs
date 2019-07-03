@@ -30,7 +30,7 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
     // single global var for app conf settings
-    <g:set var="fqParamsSingleQ" value="${(params.fq) ? ' AND ' + params.list('fq')?.join(' AND ') : ''}"/>
+    <g:set var="fqParamsSingleQ" value="${(params.fq) ? '&fq=' + params.list('fq')?.join(' AND ') : '' /* this seems not useful */}"/>
     <g:set var="fqParams" value="${(params.fq) ? "&fq=" + params.list('fq')?.join('&fq=') : ''}"/>
     <g:set var="searchString" value="${raw(sr?.urlParameters).encodeAsURL()}"/>
     var BC_CONF = {
@@ -459,7 +459,6 @@
                                     <option value="50" <g:if test="${pageSizeVar == "50"}">selected</g:if>>50</option>
                                     <option value="100" <g:if test="${pageSizeVar == "100"}">selected</g:if>>100</option>
                                 </select>&nbsp;
-                            <g:set var="useDefault" value="${(!params.sort && !params.dir) ? true : false}"/>
                             <g:message code="list.sortwidgets.sort.label" default="sort"/>:
                                 <select id="sort" name="sort" class="input-small">
                                     <option value="score" <g:if test="${params.sort == 'score'}">selected</g:if>><g:message
@@ -471,14 +470,14 @@
                                             <g:if test="${params.sort == 'common_name'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option03" default="Common name"/></option>
                                     <option value="occurrence_date"
-                                            <g:if test="${params.sort == 'occurrence_date'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
+                                            <g:if test="${!params.sort || params.sort == 'occurrence_date'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
                                     <g:if test="${skin != 'avh'}">
                                         <option value="record_type"
                                                 <g:if test="${params.sort == 'record_type'}">selected</g:if>><g:message
                                                 code="list.sortwidgets.sort.option05" default="Record type"/></option>
                                     </g:if>
                                     <option value="first_loaded_date"
-                                            <g:if test="${useDefault || params.sort == 'first_loaded_date'}">selected</g:if>><g:message
+                                            <g:if test="${params.sort == 'first_loaded_date'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option06" default="Date added"/></option>
                                     <option value="last_assertion_date"
                                             <g:if test="${params.sort == 'last_assertion_date'}">selected</g:if>><g:message
@@ -489,7 +488,7 @@
                                     <option value="asc" <g:if test="${params.dir == 'asc'}">selected</g:if>><g:message
                                             code="list.sortwidgets.dir.option01" default="Ascending"/></option>
                                     <option value="desc"
-                                            <g:if test="${useDefault || params.dir == 'desc'}">selected</g:if>><g:message
+                                            <g:if test="${!params.dir || params.dir == 'desc'}">selected</g:if>><g:message
                                             code="list.sortwidgets.dir.option02" default="Descending"/></option>
                                 </select>
                             </div><!-- sortWidget -->
@@ -510,7 +509,7 @@
                         <div id="searchNavBar" class="pagination">
                             <g:paginate total="${sr.totalRecords}" max="${sr.pageSize}" offset="${sr.startIndex}"
                                         omitLast="true"
-                                        params="${[taxa: params.taxa, q: params.q, fq: params.fq, wkt: params.wkt, lat: params.lat, lon: params.lon, radius: params.radius]}"/>
+                                        params="${[taxa: params.taxa, q: params.q, fq: params.fq, wkt: params.wkt, lat: params.lat, lon: params.lon, radius: params.radius, dir: params.dir]}"/>
                         </div>
                     </div><!--end solrResults-->
                     <div id="mapView" class="tab-pane">

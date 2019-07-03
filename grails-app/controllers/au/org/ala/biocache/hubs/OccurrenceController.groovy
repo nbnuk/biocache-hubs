@@ -63,8 +63,10 @@ class OccurrenceController {
             requestParams.pageSize = 20
         }
 
-        if (!params.sort && !params.dir) {
-            requestParams.sort = "first_loaded_date"
+        if (!params.sort) {
+            requestParams.sort = "occurrence_date"
+        }
+        if (!params.dir) {
             requestParams.dir = "desc"
         }
 
@@ -247,6 +249,7 @@ class OccurrenceController {
                     userEmail = "r.roberts@nbn.org.uk" // RR test ***
                 } else {
                     userEmail = authService?.getEmail()
+                    log.info("User email = " + userEmail)
                 }
                 Boolean isCollectionAdmin = false
                 Boolean userHasRoleAdmin = false
@@ -259,6 +262,7 @@ class OccurrenceController {
                 if (userHasRoleAdmin) {
                   isCollectionAdmin = true
                 } else {
+                    if (contacts != null) log.info("contacts = " + contacts)
                     if (userEmail && contacts != null && contacts.size() > 0) {
                         for (int i = 0; i < contacts.size(); i++) {
                             if (contacts.get(i).editor == true && userEmail.equalsIgnoreCase(contacts.get(i).contact.email)) {
