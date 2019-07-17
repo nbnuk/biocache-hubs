@@ -42,6 +42,15 @@ class AssertionsController {
         String assertionUuid = params.assertionUuid?: ""
         UserDetails userDetails = authService?.userDetails() // will return null if not available/not logged in
 
+        //NBN: sometimes this is null (running on localhost) because request getuserprincipal is null
+        //TODO: figure out what is happening with authentication
+        if (!userDetails) {
+            def userId = authService?.getUserId()
+            if (userId) {
+                userDetails = authService?.getUserForUserId(userId)
+            }
+        }
+
         if (recordUuid && code && (userDetails || grailsApplication.config.localhost?.fakeuser?:'' == 'true') ) { // RR test ***
             Map postResponse
             if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
