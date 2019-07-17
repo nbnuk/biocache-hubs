@@ -124,12 +124,10 @@
                     </div>
                 </div>
                 <div class="centre">
-                    <h1>
-                        <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i><g:message code="show.headingbar01.title" default="Occurrence record"/>
-                        <span id="recordId">${recordId}</span>
-                    </h1>
                     <g:if test="${record.raw.classification}">
-                        <div id="recordHeadingLine2">
+                        <!-- div id="recordHeadingLine2" style="padding-top: 0px; margin-top: 0px" -->
+                        <div id="recordHeadingLine2" style="margin-top: 0px">
+                            <h1><span style="font-size: 75%">
                             <g:message code="basicOfRecord.${record.processed.occurrence?.basisOfRecord}" default="${record.processed.occurrence?.basisOfRecord}"/>
                             <g:message code="show.heading.of" default="of"/>
                             <g:if test="${record.processed.classification.scientificName}">
@@ -153,8 +151,13 @@
                             <g:if test="${record.processed.event?.eventDate || record.raw.event?.eventDate}">
                                 <g:message code="show.heading.recordedOn" default="recorded on"/> ${record.processed.event?.eventDate ?: record.raw.event?.eventDate}
                             </g:if>
+                            </span></h1>
                         </div>
                     </g:if>
+                    <!-- h1 -->
+                        <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i><g:message code="show.headingbar01.title" default="Occurrence record"/>
+                        <span id="recordId">${recordId}</span>
+                    <!-- /h1 -->
                 </div>
             </div>
             <div class="row">
@@ -297,6 +300,8 @@
                                 </tr>
                             </g:each>
 
+                         <g:if test="${false}">
+                             <!-- little value in showing passed tests so we were asked not to display them -->
                             <g:set var="testSet" value="${record.systemAssertions.passed}"/>
                             <g:each in="${testSet}" var="test">
                                 <tr>
@@ -305,6 +310,7 @@
                                     <%--<td>More info</td>--%>
                                 </tr>
                             </g:each>
+                         </g:if>
 
                             <g:if test="${record.systemAssertions.missing}">
                                 <tr>
