@@ -51,6 +51,11 @@ class WebServicesService {
         getJsonElements(url)
     }
 
+    def JSONObject getTaxon(String guid) {
+        def url = "${grailsApplication.config.bieService.baseUrl}/species/${guid}"
+        getJsonElements(url)
+    }
+
     def JSONObject getCompareRecord(String id) {
         def url = "${grailsApplication.config.biocache.baseUrl}/occurrence/compare?uuid=${id.encodeAsURL()}"
         getJsonElements(url)

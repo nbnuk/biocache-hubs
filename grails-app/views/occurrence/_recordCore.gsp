@@ -431,6 +431,11 @@
                 <br/><span class="originalValue"><g:message code="recordcore.species.01" default="Supplied as"/> "<i>${record.raw.classification.species}</i>"</span>
             </g:if>
         </alatag:occurrenceTableRow>
+        <alatag:occurrenceTableRow annotate="true" section="taxonomy" fieldCode="species" fieldName="Species">
+            <g:if test="${taxon?.taxonConcept?.nameComplete}">
+                ${taxon.taxonConcept.nameComplete}
+            </g:if>
+        </alatag:occurrenceTableRow>
         <!-- Genus 11 -->
         <alatag:occurrenceTableRow annotate="true" section="taxonomy" fieldCode="genus" fieldName="Genus">
             ${fieldsMap.put("genus", true)}
