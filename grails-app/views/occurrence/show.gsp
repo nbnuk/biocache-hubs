@@ -124,12 +124,13 @@
                     </div>
                 </div>
                 <div class="centre">
-                    <h1>
-                        <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i><g:message code="show.headingbar01.title" default="Occurrence record"/>
-                        <span id="recordId">${recordId}</span>
-                    </h1>
                     <g:if test="${record.raw.classification}">
-                        <div id="recordHeadingLine2">
+                        <!-- div id="recordHeadingLine2" style="padding-top: 0px; margin-top: 0px" -->
+                        <div id="recordHeadingLine2" style="margin-top: 0px">
+                            <h1><span style="font-size: 75%">
+
+                                <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i>
+
                             <g:message code="basicOfRecord.${record.processed.occurrence?.basisOfRecord}" default="${record.processed.occurrence?.basisOfRecord}"/>
                             <g:message code="show.heading.of" default="of"/>
                             <g:if test="${record.processed.classification.scientificName}">
@@ -153,8 +154,18 @@
                             <g:if test="${record.processed.event?.eventDate || record.raw.event?.eventDate}">
                                 <g:message code="show.heading.recordedOn" default="recorded on"/> ${record.processed.event?.eventDate ?: record.raw.event?.eventDate}
                             </g:if>
+                            <g:if test="${record.raw.occurrence.occurrenceStatus && StringUtils.containsIgnoreCase( record.raw.occurrence.occurrenceStatus, 'absent' )}">
+                                | ABSENT
+                            </g:if>
+                            </span></h1>
                         </div>
                     </g:if>
+                    <!-- h1 -->
+                    <g:if test="${false}">
+                        <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i><g:message code="show.headingbar01.title" default="Occurrence record"/>
+                        <span id="recordId">${recordId}</span>
+                    </g:if>
+                    <!-- /h1 -->
                 </div>
             </div>
             <div class="row">
@@ -297,6 +308,8 @@
                                 </tr>
                             </g:each>
 
+                         <g:if test="${false}">
+                             <!-- little value in showing passed tests so we were asked not to display them -->
                             <g:set var="testSet" value="${record.systemAssertions.passed}"/>
                             <g:each in="${testSet}" var="test">
                                 <tr>
@@ -305,6 +318,7 @@
                                     <%--<td>More info</td>--%>
                                 </tr>
                             </g:each>
+                         </g:if>
 
                             <g:if test="${record.systemAssertions.missing}">
                                 <tr>
@@ -652,7 +666,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h3 id="contactCuratorViewLabel"><g:message code="show.contactcuratorview.title" default="Contact curator"/></h3>
+                            <h3 id="contactCuratorViewLabel">Contact data provider</h3>
                         </div>
                         <div class="modal-body">
                             <p><g:message code="show.contactcuratorview.message" default="For more details and to report issues about this record, please contact a person mentioned below."></g:message> </p>
