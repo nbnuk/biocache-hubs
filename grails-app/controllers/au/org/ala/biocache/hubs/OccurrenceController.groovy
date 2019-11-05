@@ -231,10 +231,14 @@ class OccurrenceController {
                 JSONObject compareRecord = webServicesService.getCompareRecord(id)
                 JSONObject collectionInfo = null
                 JSONArray contacts = null
+                JSONObject taxon = null
 
                 if (record.processed.attribution.collectionUid) {
                     collectionInfo = webServicesService.getCollectionInfo(record.processed.attribution.collectionUid)
                     contacts = webServicesService.getCollectionContact(record.processed.attribution.collectionUid)
+                }
+                if (record.processed.classification.taxonConceptID) {
+                    taxon = webServicesService.getTaxon(record.processed.classification.taxonConceptID)
                 }
 
                 if(record.raw.attribution.dataResourceUid && (contacts == null)){
@@ -299,7 +303,8 @@ class OccurrenceController {
                         environmentalSampleInfo: postProcessingService.getLayerSampleInfo(ENVIRO_LAYER, record, layersMetaData),
                         contextualSampleInfo: postProcessingService.getLayerSampleInfo(CONTEXT_LAYER, record, layersMetaData),
                         skin: grailsApplication.config.skin.layout,
-                        showFlaggedIssues: (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()
+                        showFlaggedIssues: (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean(),
+                        taxon: taxon
                 ]
             } else {
                 flash.message = "No record found with id: ${id}"

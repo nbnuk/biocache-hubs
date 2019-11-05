@@ -6,11 +6,22 @@
 <g:if test="${contacts && contacts.size()}">
     <button href="#contactCuratorView" class="btn btn-default" id="showCurator" role="button" data-toggle="modal"
             title="Contact curator for more details on a record">
-        <span id="contactCuratorSpan" href="#contactCuratorView" title=""><i class="glyphicon glyphicon-envelope"></i> <g:message code="show.showcontactcurator.span" default="Contact curator"/></span>
+        <span id="contactCuratorSpan" href="#contactCuratorView" title=""><i class="glyphicon glyphicon-envelope"></i>Contact data provider</span>
     </button>
 </g:if>
 %{--<div class="nav-affix" data-spy="affix" data-offset-top="236" data-offset-bottom="1080">--}%
 <div class="" >
+    <g:if test="${record.processed.attribution.license}">
+        <div class="sidebar">
+            <p style="margin-bottom:20px;margin-top:20px;">
+                <b>
+                ${ 'Licence: ' }
+                <a href="https://docs.nbnatlas.org/data-licenses/" target="_blank">${ record.processed.attribution.license }</a>
+                </b>
+            </p>
+        </div>
+    </g:if>
+
     <g:if test="${record.raw.lastModifiedTime && record.processed.lastModifiedTime}">
         <div class="sidebar">
             <g:set var="rawLastModifiedString" value="${record.raw.lastModifiedTime.substring(0,10)}"/>
@@ -22,6 +33,7 @@
         </div>
     </g:if>
 
+    <g:if test="${false}">
     <ul id="navBox" class="nav nav-pills nav-stacked">
         <li><a href="#occurrenceRecord">Record</a></li>
         <li><a href="#occurrenceDataset"><g:message code="recordcore.occurencedataset.title" default="Dataset"/></a></li>
@@ -75,6 +87,8 @@
             <li><a href="#environmentalSampleInfo"><g:message code="show.outlierinformation.02.title02" default="Environmental sampling for this location"/></a></li>
         </g:if>
     </ul>
+    </g:if>
+
     <g:if test="${false && record.processed.attribution.provenance != 'Draft'}">
         <div class="sidebar">
             <div id="warnings">
