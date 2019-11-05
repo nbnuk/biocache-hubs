@@ -11,8 +11,35 @@
 </g:if>
 %{--<div class="nav-affix" data-spy="affix" data-offset-top="236" data-offset-bottom="1080">--}%
 <div class="" >
+    <g:if test="${record.raw.lastModifiedTime && record.processed.lastModifiedTime}">
+        <div class="sidebar">
+            <g:set var="rawLastModifiedString" value="${record.raw.lastModifiedTime.substring(0,10)}"/>
+            <g:set var="processedLastModifiedString" value="${record.processed.lastModifiedTime.substring(0,10)}"/>
+            <p style="margin-bottom:20px;margin-top:20px;">
+                <g:message code="show.sidebar05.p01" default="Date loaded"/>: ${rawLastModifiedString}<br/>
+                <g:message code="show.sidebar05.p02" default="Date last processed"/>: ${processedLastModifiedString}<br/>
+            </p>
+        </div>
+    </g:if>
+
     <ul id="navBox" class="nav nav-pills nav-stacked">
+        <li><a href="#occurrenceRecord">Record</a></li>
         <li><a href="#occurrenceDataset"><g:message code="recordcore.occurencedataset.title" default="Dataset"/></a></li>
+
+        <g:if test="${record.raw.occurrence.individualCount ||
+                        record.raw.occurrence.organismQuantity ||
+                        record.raw.occurrence.organismQuantityType ||
+                        record.raw.occurrence.sampleSizeUnit ||
+                        record.raw.occurrence.sampleSizeValue}">
+            <li><a href="#occurrenceAbundance">Abundance</a></li>
+        </g:if>
+
+        <g:if test="${record.raw.occurrence.lifeStage || record.raw.occurrence.behavior || record.raw.occurrence.sex ||
+                (record.raw.miscProperties && record.raw.miscProperties.organismRemarks) ||
+                (record.raw.miscProperties && record.raw.miscProperties.organismScope)}">
+            <li><a href="#occurrenceOrganism">Organism</a></li>
+        </g:if>
+
         <li><a href="#occurrenceEvent"><g:message code="recordcore.occurenceevent.title" default="Event"/></a></li>
         <li><a href="#occurrenceTaxonomy"><g:message code="recordcore.occurencetaxonomy.title" default="Taxonomy"/></a></li>
         <li><a href="#occurrenceGeospatial"><g:message code="recordcore.occurencegeospatial.title" default="Geospatial"/></a></li>
@@ -269,16 +296,6 @@
             </g:if>
             <p>
                 <g:message code="show.sidebar04.p" default="Please press the play button to hear the sound file associated with this occurrence record."/>
-            </p>
-        </div>
-    </g:if>
-    <g:if test="${record.raw.lastModifiedTime && record.processed.lastModifiedTime}">
-        <div class="sidebar">
-            <g:set var="rawLastModifiedString" value="${record.raw.lastModifiedTime.substring(0,10)}"/>
-            <g:set var="processedLastModifiedString" value="${record.processed.lastModifiedTime.substring(0,10)}"/>
-            <p style="margin-bottom:20px;margin-top:20px;">
-                <g:message code="show.sidebar05.p01" default="Date loaded"/>: ${rawLastModifiedString}<br/>
-                <g:message code="show.sidebar05.p02" default="Date last processed"/>: ${processedLastModifiedString}<br/>
             </p>
         </div>
     </g:if>
