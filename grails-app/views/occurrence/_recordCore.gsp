@@ -351,6 +351,12 @@
             </alatag:occurrenceTableRow>
         </g:if>
 
+        <g:if test="${record.raw.occurrence.vitality}">
+            <alatag:occurrenceTableRow annotate="true" section="dataset" fieldCode="occurrenceVitality" fieldName="Occurrence vitality">
+                ${record.raw.occurrence.vitality}
+            </alatag:occurrenceTableRow>
+        </g:if>
+
 
         <g:if test="${false}">
         <!-- Grid Reference -->
