@@ -105,13 +105,13 @@
                     window.location.href = downloadUrl;
                     notifyDownloadStarted();
                 } else if (downloadType == "checklist") {
-                    var downloadUrl = generateDownloadPrefix($("input#downloadChecklistUrl").val())+"&facets=species_guid&lookup=true&file="+
+                    var downloadUrl = generateDownloadPrefix($("input#downloadChecklistUrl").val())+"&facets=" + (grailsApplication.config.downloads?.checklistFacet?:"species_guid") + "&lookup=true&file="+
                             $("#filename").val()+"&sourceTypeId="+$("#sourceTypeId").val()+"&reasonTypeId="+$("#reasonTypeId").val();
                     //alert("downloadUrl = " + downloadUrl);
                     window.location.href = downloadUrl;
                     notifyDownloadStarted();
                 } else if (downloadType == "fieldGuide") {
-                    var downloadUrl = generateDownloadPrefix($("input#downloadFieldGuideUrl").val())+"&facets=species_guid"+"&sourceTypeId="+
+                    var downloadUrl = generateDownloadPrefix($("input#downloadFieldGuideUrl").val())+"&facets=" + (grailsApplication.config.downloads?.checklistFacet?:"species_guid") +"&sourceTypeId="+
                             $("#sourceTypeId").val()+"&reasonTypeId="+$("#reasonTypeId").val();
                     window.open(downloadUrl);
                     notifyDownloadStarted();
