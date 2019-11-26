@@ -582,7 +582,10 @@
 
     function addGridVariableLegendItem(){
 
+        /* keep colours consistent with biocache-service au/org/ala/biocache/web/WMSOSGridController.java renderGrid */
     var gridColours = [
+        {title:'100km', colour:'03FFFB'},
+        {title:'50km', colour:'FF8D00'},
         {title:'10km', colour:'FFFF00'},
         {title:'2km', colour:'0000FF'},
         {title:'1km', colour:'00FF00'},
