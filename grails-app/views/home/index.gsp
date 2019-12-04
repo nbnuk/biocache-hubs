@@ -351,16 +351,16 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="form-group">
-                                    <label for="raw_names"><g:message code="home.index.taxaupload.des01"
+                                    <label for="taxon_names"><g:message code="home.index.taxaupload.des01"
                                                                       default="Enter a list of taxon names/scientific names, one name per line (common names not currently supported)."/></label>
                                     <%--<p><input type="hidden" name="MAX_FILE_SIZE" value="2048" class="form-control"><input type="file" class="form-control"></p>--%>
-                                    <textarea name="queries" id="raw_names" class="form-control" rows="15" cols="60"></textarea>
+                                    <textarea name="queries" id="taxon_names" class="form-control" rows="15" cols="60"></textarea>
                                 </div>
                                 <%--<input type="submit" name="action" value="Download" class="form-control">--%>
                                 <%--&nbsp;OR&nbsp;--%>
                                 <input type="hidden" name="redirectBase"
                                        value="${serverName}${request.contextPath}/occurrences/search" class="form-control">
-                                <input type="hidden" name="field" value="raw_name" class="form-control"/>
+                                <input type="hidden" name="field" value="taxon_name" class="form-control"/>
                                 <input type="hidden" name="action" value="Search" />
                                 <input type="submit"
                                        value="${g.message(code:"home.index.catalogupload.button01", default:"Search")}" class="btn btn-primary" />
