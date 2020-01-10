@@ -678,6 +678,25 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+var getUrlParameterArray = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    var matches = [];
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            if (sParameterName[1] !== undefined) {
+                matches.push(decodeURIComponent(sParameterName[1]));
+            }
+        }
+    }
+    return matches;
+};
+
 /**
  * Catch sort drop-down and build GET URL manually
  */
@@ -686,7 +705,7 @@ function reloadWithParam(paramName, paramValue) {
     //var q = $.url().param('q'); //$.query.get('q')[0];
     //var fqList = $.url().param('fq'); //$.query.get('fq');
     var q = getUrlParameter('q');
-    var fqList = getUrlParameter('fq'); //fix issue where this includes semi-colons ; which are interpreted as param separator
+    var fqList = getUrlParameterArray('fq'); //fix issue where this includes semi-colons ; which are interpreted as param separator
 
     var sort = $.url().param('sort');
     var dir = $.url().param('dir');
