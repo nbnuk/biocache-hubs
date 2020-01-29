@@ -333,8 +333,8 @@
 
     <!-- Identification Verification Status -->
         <alatag:occurrenceTableRow annotate="true" section="dataset" fieldCode="identificationVerificationStatus" fieldName="Identification Verification Status">
-            <g:if test="${record.raw.identification && record.raw.identification.identificationVerificationStatus}">
-                ${record.raw.identification.identificationVerificationStatus}
+            <g:if test="${record.processed.identification && record.processed.identification.identificationVerificationStatus}">
+                ${record.processed.identification.identificationVerificationStatus}
             </g:if>
         </alatag:occurrenceTableRow>
 
