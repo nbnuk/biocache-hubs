@@ -129,7 +129,10 @@
                         <div id="recordHeadingLine2" style="margin-top: 0px">
                             <h1><span style="font-size: 75%">
 
-                                <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag" style="color:red;display:none;margin-right:4px"></i>
+                                <g:if test="${(record.processed?.location?.highResolution?:'false').toBoolean() && (grailsApplication.config?.hasHighResolution?.show?:'false').toBoolean()}">
+                                    <i id="hasHighResolutionNavFlagTitle" class="glyphicon glyphicon-record my-tooltip" style="color:green;display:inline-block;margin-right:4px" title="<g:message code="show.record.hashighresolution" default="Record has high resolution data available"/>"></i>
+                                </g:if>
+                                <i id="userAnnotationsNavFlagTitle" class="glyphicon glyphicon-flag my-tooltip" style="color:red;display:none;margin-right:4px" title="<g:message code="show.userassertionscontainer.title" default="User flagged issues"/>"></i>
 
                             <g:message code="basicOfRecord.${record.processed.occurrence?.basisOfRecord}" default="${record.processed.occurrence?.basisOfRecord}"/>
                             <g:message code="show.heading.of" default="of"/>

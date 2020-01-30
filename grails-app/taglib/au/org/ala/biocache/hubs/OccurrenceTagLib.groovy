@@ -646,6 +646,11 @@ class OccurrenceTagLib {
                     if (user_assert != "0") {
                         log.info("user_assert for:" + occurrence.toString())
                     }
+                    if ((grailsApplication.config?.hasHighResolution?.show?: 'false').toBoolean()) {
+                        if ((occurrence?.highResolution?:'false').toBoolean()) { //only flag open or uncorrected issues
+                            mkp.yieldUnescaped("<i class='glyphicon glyphicon-record' style='color:green;display:inline-block'></i>")
+                        }
+                    }
                     if ((grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()) {
                         if (user_assert == "50005" || user_assert == "50001") { //only flag open or uncorrected issues
                             mkp.yieldUnescaped("<i class='glyphicon glyphicon-flag' style='color:red;display:inline-block'></i>")

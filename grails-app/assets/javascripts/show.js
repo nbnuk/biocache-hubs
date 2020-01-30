@@ -16,6 +16,8 @@
  */
 $(document).ready(function() {
 
+    $(".my-tooltip").tooltip();
+
     $('#showUncheckedTests').on('click', function(e){
         $('.uncheckTestResult').toggle();
     });
