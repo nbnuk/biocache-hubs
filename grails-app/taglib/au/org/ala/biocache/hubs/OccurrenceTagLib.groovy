@@ -648,7 +648,7 @@ class OccurrenceTagLib {
                     }
                     if ((grailsApplication.config?.hasHighResolution?.show?: 'false').toBoolean()) {
                         if ((occurrence?.highResolution?:'false').toBoolean()) { //only flag open or uncorrected issues
-                            mkp.yieldUnescaped("<i class='glyphicon glyphicon-record' style='color:green;display:inline-block'></i>")
+                            mkp.yieldUnescaped("<i class='glyphicon glyphicon-record' style='color:#AD841F;display:inline-block'></i>")
                         }
                     }
                     if ((grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()) {
