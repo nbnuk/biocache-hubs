@@ -65,7 +65,7 @@
             <li><a href="#soundsHeader"><g:message code="show.soundsheader.title" default="Sounds"/></a></li>
         </g:if>
         <g:if test="${(record.processed?.location?.highResolution?:'false').toBoolean() && (grailsApplication.config?.hasHighResolution?.show?:'false').toBoolean()}">
-            <li><i id="hasHighResolutionNavFlagTitle" class="glyphicon glyphicon-record my-tooltip" style="color:green;display:inline-block;margin-right:4px" title="<g:message code="show.record.hashighresolution" default="Record has high resolution data available"/>"></i>
+            <li><i id="hasHighResolutionNavFlagTitle" class="glyphicon glyphicon-record my-tooltip" style="color:#AD841F;display:inline-block;margin-right:4px" title="<g:message code="show.record.hashighresolution" default="Record has high resolution data available"/>"></i>
             <g:message code="show.record.hashighresolution" default="Record has high resolution data available"/>
             </li>
         </g:if>

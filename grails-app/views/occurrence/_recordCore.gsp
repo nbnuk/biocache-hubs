@@ -299,7 +299,9 @@
             <g:else>
                 ${ "Not supplied" }
             </g:else>
-
+                <g:if test="${(record.processed?.location?.highResolution?:'false').toBoolean() && (grailsApplication.config?.hasHighResolution?.show?:'false').toBoolean()}">
+                    <br/>Higher resolution location information available, please contact the data provider
+                </g:if>
             </g:if>
             <g:else>
                 ${ "Not supplied" }
