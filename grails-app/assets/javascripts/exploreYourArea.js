@@ -158,7 +158,7 @@ $(document).ready(function() {
     $('#viewAllRecords').live("click", function(e) {
         e.preventDefault();
         //var params = "q=taxon_name:*|"+$('#latitude').val()+"|"+$('#longitude').val()+"|"+$('#radius').val();
-        var params = "q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=geospatial_kosher:true";
+        var params = "q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=(geospatial_kosher:true AND -occurrence_status:absent)";
         if (speciesGroup != "ALL_SPECIES") {
             params += "&fq=species_group:" + speciesGroup;
         }
@@ -170,7 +170,7 @@ $(document).ready(function() {
     $('#downloadData').live("click", function(e) {
         e.preventDefault();
         //var params = "q=taxon_name:*|"+$('#latitude').val()+"|"+$('#longitude').val()+"|"+$('#radius').val();
-        var params = "?q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=geospatial_kosher:true";
+        var params = "?q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=(geospatial_kosher:true AND -occurrence_status:absent)";
         if (speciesGroup != "ALL_SPECIES") {
             params += "&fq=species_group:" + speciesGroup;
         }
@@ -394,7 +394,7 @@ function loadRecordsLayer(retry) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true",
+        fq: "(geospatial_kosher:true AND -occurrence_status:absent)",
         qc: EYA_CONF.queryContext,
         zoom: zoom
     };
@@ -463,6 +463,7 @@ function loadNewGeoJsonData(data) {
         } else if (speciesGroup != "ALL_SPECIES") {
             fqParam = "&fq=species_group:" + speciesGroup;
         }
+        fqParam = fqParam + "&fq=-occurrence_status:absent";
 
         var content = '<div class="infoWindow">Number of records: '+n.properties.count+'<br/>'+
             '<a href="'+ EYA_CONF.contextPath +'/occurrences/search?q='+solrQuery+fqParam+
@@ -642,7 +643,7 @@ function groupClicked(el) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true",
+        fq: "(geospatial_kosher:true AND -occurrence_status:absent)",
         qc: EYA_CONF.queryContext,
         pageSize: 50
     };
@@ -692,7 +693,7 @@ function processSpeciesJsonData(data, appendResults) {
                         ' species profile</a> | ';
                 }
                 speciesInfo = speciesInfo + '<a href="' + EYA_CONF.contextPath + '/occurrences/search?q=taxon_name:%22' + data[i].name +
-                    '%22&lat=' + $('input#latitude').val() + '&lon=' + $('input#longitude').val() + '&radius=' + $('select#radius').val() + '" title="' +
+                    '%22&lat=' + $('input#latitude').val() + '&lon=' + $('input#longitude').val() + '&radius=' + $('select#radius').val() + '&fq=-occurrence_status:absent" title="' +
                     recsTitle + '"><img src="' + EYA_CONF.imagesUrlPrefix + '/database_go.png" ' +
                     'alt="search list icon" style="margin-bottom:-3px;" class="no-rounding"/> list of records</a></div>';
                 tr = tr + speciesInfo;
@@ -779,7 +780,7 @@ function processSpeciesJsonData(data, appendResults) {
                 lat: $('#latitude').val(),
                 lon: $('#longitude').val(),
                 radius: $('#radius').val(),
-                fq: "geospatial_kosher:true",
+                fq: "(geospatial_kosher:true AND -occurrence_status:absent)",
                 start: start,
                 common: commonName,
                 sort: sortParam,
@@ -817,7 +818,7 @@ function loadGroups() {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true",
+        fq: "(geospatial_kosher:true AND -occurrence_status:absent)",
         facets: "species_group",
         qc: EYA_CONF.queryContext
     }

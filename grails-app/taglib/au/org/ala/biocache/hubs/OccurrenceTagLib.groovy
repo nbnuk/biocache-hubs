@@ -627,6 +627,10 @@ class OccurrenceTagLib {
                     } else if (occurrence.year) {
                         outputResultsLabel('year', alatag.message(code:"record.year.label"), occurrence.year, true)
                     }
+
+                    if (StringUtils.containsIgnoreCase( (occurrence?.miscStringProperties?.occurrence_status_s?:''), 'absent' )) {
+                        mkp.yieldUnescaped(" (absent) ")
+                    }
                     if (occurrence.stateProvince) {
                         mkp.yieldUnescaped(occurrence.stateProvince)
                         //outputResultsLabel('state', alatag.message(code:"record.state.label"), alatag.message(code:occurrence.stateProvince), true)
