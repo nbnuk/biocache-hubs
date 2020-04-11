@@ -37,6 +37,8 @@
 var geocoder, map, marker, circle, markerInfowindow, lastInfoWindow, taxon, taxonGuid;
 var points = [], infoWindows = [], speciesGroup = "ALL_SPECIES";
 var zoomForRadius = {
+    100: 16,
+    500: 15,
     1000: 14,
     2000: 13,
     5000: 12,
@@ -46,7 +48,9 @@ var radiusForZoom = {
     11: 10,
     12: 5,
     13: 2,
-    14: 1
+    14: 1,
+    15: 0.5,
+    16: 0.1
 };
 
 
@@ -99,7 +103,7 @@ $(document).ready(function() {
     // Register onChange event on radius drop-down - will re-submit form
     $('select#radius').change(
         function(e) {
-            EYA_CONF.radius = parseInt($(this).val());
+            EYA_CONF.radius = parseFloat($(this).val());
             var radiusInMetres = EYA_CONF.radius * 1000;
             circle.setRadius(radiusInMetres);
             EYA_CONF.zoom = zoomForRadius[radiusInMetres];
@@ -285,7 +289,7 @@ function loadMap() {
     });
 
     // Add a Circle overlay to the map.
-    var radius = parseInt($('select#radius').val()) * 1010;
+    var radius = Math.round(parseFloat($('select#radius').val()) * 1010);
     circle = new google.maps.Circle({
         map: map,
         radius: radius,
@@ -368,6 +372,7 @@ function updateMarkerPosition(latLng) {
     $('#latitude').val(latLng.lat());
     $('#longitude').val(latLng.lng());
     // Update URL hash for back button, etc
+    console.log(EYA_CONF);
     location.hash = latLng.lat() + "|" + latLng.lng() + "|" + EYA_CONF.zoom + "|" + speciesGroup;
     $('#dialog-confirm #rad').html(EYA_CONF.radius);
 }
@@ -859,6 +864,7 @@ function populateSpeciesGroups(data) {
 }
 
 function bookmarkedSearch(lat, lng, zoom1, group) {
+    console.log("zoom1 = " + zoom1);
     EYA_CONF.radius = radiusForZoom[zoom1];  // set global var
     EYA_CONF.zoom = parseInt(zoom1);
     $('select#radius').val(EYA_CONF.radius); // update drop-down widget
