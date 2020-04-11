@@ -115,9 +115,12 @@
             <g:if test="${taxon?.taxonConcept?.nameComplete}">
                 ${taxon.taxonConcept.nameComplete}
             </g:if>
-            <g:else>
+            <g:elseif test="${record.processed.classification.scientificName}">
                 ${record.processed.classification.scientificName?:''}
-            </g:else>
+            </g:elseif>
+            <g:elseif test="${record.raw.classification.scientificName}">
+                ${record.raw.classification.scientificName?:''} (unmatched)
+            </g:elseif>
 
             <g:if test="${record.processed.classification.taxonRankID?.toInteger() > 5000}"></i></g:if>
             <g:if test="${taxaLinks.baseUrl && record.processed.classification.taxonConceptID}">
