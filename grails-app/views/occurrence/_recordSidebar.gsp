@@ -47,8 +47,8 @@
         </g:if>
 
         <g:if test="${record.raw.occurrence.lifeStage || record.raw.occurrence.behavior || record.raw.occurrence.sex ||
-                (record.raw.miscProperties && record.raw.miscProperties.organismRemarks) ||
-                (record.raw.miscProperties && record.raw.miscProperties.organismScope)}">
+                record.raw.occurrence.organismRemarks ||
+                record.raw.occurrence.organismScope}">
             <li><a href="#occurrenceOrganism">Organism</a></li>
         </g:if>
 

@@ -550,8 +550,8 @@
         <!-- ----------------------------------------------------------- -->
 
     <g:if test="${record.raw.occurrence.lifeStage || record.raw.occurrence.behavior || record.raw.occurrence.sex ||
-                    (record.raw.miscProperties && record.raw.miscProperties.organismRemarks) ||
-                    (record.raw.miscProperties && record.raw.miscProperties.organismScope)}">
+                    record.raw.occurrence.organismRemarks ||
+                    record.raw.occurrence.organismScope}">
 
         <div id="occurrenceOrganism">
         <h3>Organism</h3>
@@ -581,15 +581,15 @@
 
             <!-- Organism Scope -->
             <alatag:occurrenceTableRow annotate="true" section="dataset" fieldCode="organismScope" fieldName="Organism scope">
-                <g:if test="${record.raw.miscProperties && record.raw.miscProperties.organismScope}">
-                    ${record.raw.miscProperties.organismScope}
+                <g:if test="${record.raw.occurrence.organismScope}">
+                    ${record.raw.occurrence.organismScope}
                 </g:if>
             </alatag:occurrenceTableRow>
 
             <!-- Organism Remarks -->
             <alatag:occurrenceTableRow annotate="true" section="dataset" fieldCode="organismRemarks" fieldName="Organism remarks">
-                <g:if test="${record.raw.miscProperties && record.raw.miscProperties.organismRemarks}">
-                    ${record.raw.miscProperties.organismRemarks}
+                <g:if test="${record.raw.occurrence.organismRemarks}">
+                    ${record.raw.occurrence.organismRemarks}
                 </g:if>
             </alatag:occurrenceTableRow>
 
