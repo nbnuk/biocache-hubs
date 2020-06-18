@@ -1508,6 +1508,13 @@
         ${record.processed.location.coordinateUncertaintyInMeters ? record.processed.location.coordinateUncertaintyInMeters : 'Unknown'}
     </g:if>
 </alatag:occurrenceTableRow>
+<!-- Grid size -->
+    <alatag:occurrenceTableRow annotate="false" section="geospatial" fieldCode="gridSizeInMeters" fieldName="Grid size in metres">
+        ${fieldsMap.put("gridSizeInMeters", true)}
+        <g:if test="${record.processed.location.gridSizeInMeters}">
+            ${record.processed.location.gridSizeInMeters ? record.processed.location.gridSizeInMeters : 'Unknown'}
+        </g:if>
+    </alatag:occurrenceTableRow>
 <!-- Data Generalizations -->
 <alatag:occurrenceTableRow annotate="false" section="geospatial" fieldCode="generalisedInMetres" fieldName="Coordinates generalised">
     ${fieldsMap.put("generalisedInMetres", true)}

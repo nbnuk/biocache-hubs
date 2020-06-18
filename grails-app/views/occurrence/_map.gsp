@@ -45,7 +45,7 @@
                                     <g:if test="${defaultColourBy && facetResult.fieldName == defaultColourBy}">selected="selected"</g:if>
                                 </g:set>
                                 %{-- <g:if test="${facetResult.fieldName == 'occurrence_year'}">${facetResult.fieldName = 'decade'}</g:if> --}%
-                                <g:if test="${facetResult.fieldName == 'uncertainty'}">${facetResult.fieldName = 'coordinate_uncertainty'}</g:if>
+                                <g:if test="${facetResult.fieldName == 'grid_size'}">${facetResult.fieldName = 'grid_size'}</g:if>
                                 <g:if test="${facetResult.fieldResult.size() > 0}">
                                   %{-- the test 'fieldResult.size > 1' is to exclude single-value filters
                                     -- For testing show 1 fieldResult, e.g. geospatial_kosher --}%
@@ -469,8 +469,8 @@
             if(colourByFacet == "variablegrid" || colourByFacet == "singlegrid" || colourByFacet == "10kgrid"){
                    envProperty = "colormode:osgrid;gridlabels:true;gridres:" + colourByFacet + ";opacity:1;color:" + defaultPointColour;
             } else if(colourByFacet == "gridVariable"){
-                colourByFacet = "coordinate_uncertainty"
-                envProperty = "colormode:coordinate_uncertainty;name:circle;size:"+pointSize+";opacity:1;cellfill:0xffccff;variablegrids:on"
+                colourByFacet = "grid_size"
+                envProperty = "colormode:grid_size;name:circle;size:"+pointSize+";opacity:1;cellfill:0xffccff;variablegrids:on"
             } else {
                 envProperty = "colormode:" + colourByFacet + ";name:circle;size:"+pointSize+";opacity:1;"
             }
