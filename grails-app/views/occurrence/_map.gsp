@@ -1340,24 +1340,37 @@
             baseLayer = baseMapValue.substring(10);
         }
 
+        var mapLayout =
+            '&extents=' + extents +  //need to retrieve the
+            '&format=' + $('#format').val() +
+            '&dpi=' + $('#dpi').val() +
+            '&pradiusmm=' + $('#pradiusmm').val() +
+            '&popacity=' + $('#popacity').val() +
+            '&pcolour=' + $(':input[name=pcolour]').val().replace('#','').toUpperCase() +
+            '&widthmm=' + $('#widthmm').val() +
+            '&scale=' + $(':input[name=scale]:checked').val() +
+            '&outline=' + $(':input[name=outline]:checked').val() +
+            '&outlineColour=0x000000' +
+            '&baselayer=' + baseLayer +
+            '&baseMap=' + baseMap;
+
         var downloadUrl =  $('#mapDownloadUrl').val() +
                 '${raw(sr.urlParameters)}' +
-                '&extents=' + extents +  //need to retrieve the
-                '&format=' + $('#format').val() +
-                '&dpi=' + $('#dpi').val() +
-                '&pradiusmm=' + $('#pradiusmm').val() +
-                '&popacity=' + $('#popacity').val() +
-                '&pcolour=' + $(':input[name=pcolour]').val().replace('#','').toUpperCase() +
-                '&widthmm=' + $('#widthmm').val() +
-                '&scale=' + $(':input[name=scale]:checked').val() +
-                '&outline=' + $(':input[name=outline]:checked').val() +
-                '&outlineColour=0x000000' +
-                '&baselayer=' + baseLayer +
-                '&baseMap=' + baseMap +
+                mapLayout +
                 '&fileName=' + $('#fileName').val()+'.'+$('#format').val().toLowerCase();
+
+
+        var downloadUrlNew = '/download?' +
+                'searchParams=' + encodeURIComponent('${raw(sr.urlParameters)}') +
+                '&targetUri=/occurrences/search' +
+                '&totalRecords=1' + //needed?
+                '&downloadType=map' +
+                '&mapLayoutParams=' + encodeURIComponent(mapLayout) +
+                '&file=' + $('#fileName').val();
+
 
         //console.log('downloadUrl', downloadUrl);
         $('#downloadMap').modal('hide');
-        document.location.href = downloadUrl;
+        document.location.href = downloadUrlNew;
     }
 </script>
