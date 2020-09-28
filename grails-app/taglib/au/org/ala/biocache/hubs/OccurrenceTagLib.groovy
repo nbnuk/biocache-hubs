@@ -139,6 +139,7 @@ class OccurrenceTagLib {
      */
     def currentFilterItem = { attrs ->
         def item = attrs.item
+        log.info("*** attrs = " + attrs.toString())
         def filterLabel = item.value.displayName.replaceFirst(/^\-/, "") // remove leading "-" for exclude searches
         def preFix = (item.value.displayName.startsWith('-')) ? "<span class='excludeFq'>[exclude]</span> " : ""
         def fqLabel = preFix + filterLabel
@@ -831,7 +832,16 @@ class OccurrenceTagLib {
         paramsCopy.remove("wkt")
         paramsCopy.remove("action")
         paramsCopy.remove("controller")
-        def queryString = WebUtils.toQueryString(paramsCopy)
+        def fqMultiQueryString = ""
+        if (paramsCopy.get("fq") != null && paramsCopy.get("fq").getClass().isArray()) {
+            //this is a workaround for the contents of a the fq parameter being an array instead of another mapo (which I think would be handled by toQueryString by recursion)
+            paramsCopy.get("fq").each {
+                fqMultiQueryString = fqMultiQueryString + "&fq=" +
+                        URLEncoder.encode(it.value.toString(), "UTF-8")
+            }
+            paramsCopy.remove("fq")
+        }
+        def queryString = WebUtils.toQueryString(paramsCopy) + fqMultiQueryString
         log.debug "queryString = ${queryString}"
         out << queryString
     }
