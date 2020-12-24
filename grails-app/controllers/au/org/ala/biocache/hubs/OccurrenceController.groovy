@@ -59,6 +59,13 @@ class OccurrenceController {
         def start = System.currentTimeMillis()
         requestParams.fq = params.list("fq") as String[] // override Grails binding which splits on internal commas in value
 
+        log.debug "fq = ${requestParams.fq}"
+
+        if(requestParams.fq.length == 0){
+            requestParams.fq = ['occurrence_status:"present"']
+        }
+
+
         if (!params.pageSize) {
             requestParams.pageSize = 20
         }
@@ -103,17 +110,20 @@ class OccurrenceController {
 
             final facetsDefaultSelectedConfig = grailsApplication.config.facets.defaultSelected
             if (!userFacets && facetsDefaultSelectedConfig) {
-                userFacets = facetsDefaultSelectedConfig.trim().split(",")
-                log.debug "facetsDefaultSelectedConfig = ${facetsDefaultSelectedConfig}"
-                log.debug "userFacets = ${userFacets}"
                 def facetKeys = defaultFacets.keySet()
                 facetKeys.each {
                     defaultFacets.put(it, false)
                 }
+
+                userFacets = facetsDefaultSelectedConfig.trim().split(",")
                 userFacets.each {
                     defaultFacets.put(it, true)
                 }
             }
+
+            log.debug "facetsDefaultSelectedConfig = ${facetsDefaultSelectedConfig}"
+            log.debug "userFacets = ${userFacets}"
+            log.debug "defaultFacets = ${defaultFacets}"
 
             List dynamicFacets = []
 
@@ -149,11 +159,9 @@ class OccurrenceController {
             }
 
             def hasImages = postProcessingService.resultsHaveImages(searchResults)
-            if(grailsApplication.config.alwaysshow.imagetab?.toString()?.toBoolean()){
+            if(grailsApplication.config.alwaysshow.imagetab?.toString()?.toBoolean()) {
                 hasImages = true
             }
-
-            log.debug "defaultFacets = ${defaultFacets}"
 
             [
                     sr: searchResults,
