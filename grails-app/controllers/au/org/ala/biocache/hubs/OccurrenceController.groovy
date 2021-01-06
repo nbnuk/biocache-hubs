@@ -60,11 +60,12 @@ class OccurrenceController {
         requestParams.fq = params.list("fq") as String[] // override Grails binding which splits on internal commas in value
 
         log.debug "fq = ${requestParams.fq}"
+        log.debug "deff = ${grailsApplication.config.facets.defaultFilters}"
 
-        if(requestParams.fq.length == 0){
-            requestParams.fq = ['occurrence_status:"present"']
+        if(requestParams.fq.length == 0 && grailsApplication.config.facets.defaultFilters){
+            requestParams.fq = grailsApplication.config.facets.defaultFilters.toString().split(',')
+//            requestParams.fq = ['occurrence_status:"present"', '-user_assertions:(50001 OR 50005 OR 50006)']
         }
-
 
         if (!params.pageSize) {
             requestParams.pageSize = 20
