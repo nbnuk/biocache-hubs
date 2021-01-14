@@ -63,8 +63,10 @@ class OccurrenceController {
         log.debug "deff = ${grailsApplication.config.facets.defaultFilters}"
 
         if(requestParams.fq.length == 0 && grailsApplication.config.facets.defaultFilters){
-            requestParams.fq = grailsApplication.config.facets.defaultFilters.toString().split(',')
+//            requestParams.fq = grailsApplication.config.facets.defaultFilters.toString().split(',')
 //            requestParams.fq = ['occurrence_status:"present"', '-user_assertions:(50001 OR 50005 OR 50006)']
+            params.put('fq',grailsApplication.config.facets.defaultFilters.toString().split(','));
+            return redirect(action: 'list', params: params)
         }
 
         if (!params.pageSize) {
