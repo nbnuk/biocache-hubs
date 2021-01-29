@@ -130,13 +130,18 @@ class OccurrenceController {
 
             List dynamicFacets = []
 
-            String[] requestedFacets = userFacets ?: filteredFacets
+            def requestedFacets = (userFacets ?: filteredFacets) as List
 
             if (grailsApplication.config.facets.includeDynamicFacets?.toString()?.toBoolean()) {
                 // Sandbox only...
                 dynamicFacets = webServicesService.getDynamicFacets(requestParams.q)
                 requestedFacets = postProcessingService.mergeRequestedFacets(requestedFacets as List, dynamicFacets)
+
+
             }
+            log.debug "requestedFacets = ${requestedFacets}"
+            requestedFacets.addAll(["identification_verification_status", "occurrence_status", "basis_of_record", "license"])
+
 
             requestParams.facets = requestedFacets
 
