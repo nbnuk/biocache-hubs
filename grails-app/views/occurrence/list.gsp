@@ -601,6 +601,9 @@
                             <g:set var="fossilCount" value="${sr.facetResults?.find{it.fieldName=="basis_of_record"}?.fieldResult?.find{it.label=="Fossil specimen"}?.count}"/>
                             <g:set var="licenceCount" value="${sr.facetResults?.find{it.fieldName=="license"}?.fieldResult?.find{it.label=="CC-BY-NC"}?.count}"/>
                             <g:set var="buttonCount" value="${(unconfirmedIdentificationCount > 0 ? 1 : 0) + (absenceCount > 0 ? 1 : 0) + (fossilCount > 0 ? 1 : 0) + (licenceCount > 0 ? 1 : 0)}"/>
+                            <g:set var="absenceFilterPresent" value="${sr.activeFacetMap["-occurrence_status"]?.value == '"absent"'}" />
+%{--                            ${absenceFilterPresent}--}%
+
                             <h3><g:message code="list.overviewtab.title" default="Overview"/></h3>
                             <g:if test="${buttonCount > 0}">
                             %{-- <p><g:message code="list.overviewtab.description" default="Here you can refine your results before downloading them."/></p>--}%
@@ -622,7 +625,7 @@
                                     </g:if>
                                 </li>
                                 <li class="list-group-item">
-                                    <label><span class="count absence-record-count"><g:formatNumber number="${absenceCount ?: 0}" format="###,###,###,##0"/></span> absence records ${absenceCount > 0 ? "" : "(excluded by default)"}</label>
+                                    <label><span class="count absence-record-count"><g:formatNumber number="${absenceCount ?: 0}" format="###,###,###,##0"/></span> absence records ${absenceFilterPresent ? "(excluded by default)" : ""}</label>
                                     <g:if test="${absenceCount > 0}">
                                         <g:if test="${sr.totalRecords == absenceCount}">
                                             <a class="btn btn-primary disabled exclude">You cannot exclude all records</a>
