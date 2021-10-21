@@ -203,7 +203,7 @@ class PostProcessingService {
 
         String userFacets = null
         String[] facets = null
-        String rawCookie = getCookieValue(request.getCookies(), "user_facets", null)
+        String rawCookie = getCookieValue(request.getCookies(), "user_facets_new", null)
 
         if (rawCookie) {
             try {

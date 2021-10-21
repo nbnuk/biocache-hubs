@@ -215,7 +215,7 @@ $(document).ready(function() {
         //Check user has selected at least 1 facet
         if (selectedFacets.length > 0 && selectedFacets.length  <= BC_CONF.maxFacets) {
             // save facets to the user_facets cookie
-            $.cookie("user_facets", selectedFacets, { expires: 7 });
+            $.cookie("user_facets_new", selectedFacets, { expires: 7 });
             // reload page
             document.location.reload(true);
         } else if (selectedFacets.length > BC_CONF.maxFacets) {
@@ -228,12 +228,12 @@ $(document).ready(function() {
     // reset facet options to default values (clear cookie)
     $("#resetFacetOptions").click(function(e) {
         e.preventDefault();
-        $.removeCookie('user_facets');
+        $.removeCookie('user_facets_new');
         document.location.reload(true);
     });
 
     // load stored prefs from cookie
-    var userFacets = $.cookie("user_facets");
+    var userFacets = $.cookie("user_facets_new");
     if (userFacets) {
         $(":input.facetOpts").removeAttr("checked");
         var facetList = userFacets.split(",");
