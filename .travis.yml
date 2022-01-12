@@ -8,7 +8,7 @@ branches:
   - data-quality
   - hotfix
   - bs3-with-grails3
-  - dev
+  - develop
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -21,5 +21,5 @@ after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./gradlew publish'
 env:
   global:
-  - secure: fwa7jtwNL/MNa3+iI+r0jrGwnQcC8fYtgH9vbOT3x9MHo0b2K2CCTq+io+U2iDhFpDt1Tee49ZqL38aQV+/Q7oW9OddRCBhpPafLwvIeAeEAzYVfZzYj0M5QfomqhQfFqaeBlsDGWLmfqs+Qa56acG/5AXvy2bdIBkx8eobxKHw=
-  - secure: JICocWnUXHHv+yt1XM/8GcurEmaNwzAbnmAGylaVriCq98m31clDGms1OKoHU11g9Ux8uNSmydafvf+oEFzpm8LAyqrtDcPBqi8UXG+4AY3SctutdDGHE2Ue3ly8HlVkMY2e9wnA2bU/Wmq4VesyvPCIRp/IeGi+sE02F+3IYAQ=
+    - secure: "Ntmm1Lrq5mrzBn94MnkZBDWB82BDjD46J1eeAbXna4JE6oBmeqUDyf290TXJ9lgip/hSkoQRkynq454LqLXCaEI0vUVvKbV+ccoL778zxjzwuvooEjOtwrk2DN6OcgXGIHIh5ob5T8bUeyzoiCqLmHgkfS5Z97iZh5x2y508KuGgK0zxgdJcaA7TrU3oilfU6+nlvraqIsyJQQuIUcrhZBaND3f3vwUYd9Zd6QMK9rTgv0qIISJX+hxVx667dlePQYZKGjw1Nffggoftk/p/xVAVigRnSuQ7XlFBnuDYZUA110XT3a5wb/Dg9rtZYu1UzYQP86bKTN/ap86+FZFJ8AvNVJa5RvXCIjFNQOlg5cKlaKunxtRC24tp2yZfZZiWJxQpS3YsYxVQriGNlwZa0v+R6ze/juVTm/eQqYJzgSb1A9Dd2774hImOefctoUBXIXL2nYE60Syivg8+T3wayz16dzukkw7gELS/I73JxaVsyR96CZMRYGDnw7sh2DsDSo9tA6RYjz8u3he2qmuAEo128hQYN7O4vTprjQAKUSRXqbfjawfCihjLqpxrV6qoWks85/3vyUNNQ9/cfXFtTIkkV6F0S6zhFnGVJ3YBHaraUH8UfgAhcvzSRYZzU58muMRt6DkDgux1JV1Q7Gm1RcMEdPI9mdXFkoZwb38nWPA="
+    - secure: "nXjvwjeHh96wqgeO/66a4oQsQNzjJnPgJmVkGykjZ/9TWSvfaKDLpTN9HvEYTVw2cV5OQF5qQfdgf1amo219Ns0Nljcvya7ui0ZjSWDwdaYDKhLZK07xpJYtAn797sLYqnOJ6hyA40LvlrX3AO408CwFRfekWv7tTMwHDBVY7H+Ik1xmPccZGUF79gBeTiiSGAqSOZYfwfji8m6vRhE1VYaA9bFPiifgt7B9rZ2bGkQoopiLZIu3KTsrjDJLmyMzTcLkFg0vcH3NvJJaI9rKcZA0hY1+JujeUQ33S7vyhbTq6SoOsxMhx2owZe7XplHxmW7hY5GemxIH/2zjaLqxZddU1a00uK3kgRx/vL3IDYIUNZGQODFZudy4LH4YlUuNR8PNDlTuJ/3dZCfGVHjykzhFBrwAirFZlXNciC1vjsb2vy2aQPQ4CtBLXmGuhgOzjsUvhQiwvkseBLOfAINxvZqugYkcj4m16F/57nhLKF/TaBs8S/QO8YtMYS2AqtJeH4h17bse7niv2HY/7Tm1i6Stq+jAQeBPi+WRnhmiK09I0IOZ8DGdohmwRb0VkGmUMFBWF5MCfOCWmIdB2bE/DQtYZb2bnFeleQ3w1bmvH15U9ntc91c1oNrYA8jLSALzukew/06hifk0OxQCUeTjM4UFfLwLYgmDYWtEoT8mZKQ="
