@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-version "5.0.0-SNAPSHOT"
+version "5.0.1-SNAPSHOT"
 group "au.org.ala.plugins.grails"
 
 apply plugin:"eclipse"
@@ -145,7 +145,7 @@ publishing {
                     it.replaceNode {}
                 }
             }
-            from components.java
+            from components.web
 
         }
     }
