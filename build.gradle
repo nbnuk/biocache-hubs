@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
-		maven { url "https://nexus.ala.org.au/content/groups/public/" }
+        maven { url "https://nexus.ala.org.au/content/groups/public/" }
         maven { url "https://repository.gbif.org/repository/uk-nbn-releases/" }
         maven { url "https://repo.grails.org/grails/core" }
     }
@@ -16,6 +16,8 @@ group "au.org.ala.plugins.grails"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
+apply plugin:"war"
+//apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-plugin"
 apply plugin:"org.grails.grails-plugin-publish"
 apply plugin:"org.grails.grails-gsp"
@@ -27,7 +29,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenLocal()
-	maven { url "https://nexus.ala.org.au/content/groups/public/" }
+    maven { url "https://nexus.ala.org.au/content/groups/public/" }
     maven { url "https://repo.grails.org/grails/core" }
 }
 
