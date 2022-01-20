@@ -16,7 +16,6 @@ group "au.org.ala.plugins.grails"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
-apply plugin:"war"
 //apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-plugin"
 apply plugin:"org.grails.grails-plugin-publish"
@@ -147,7 +146,7 @@ publishing {
                     it.replaceNode {}
                 }
             }
-            from components.web
+            from components.java
 
         }
     }
