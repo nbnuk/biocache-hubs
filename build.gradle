@@ -1,8 +1,8 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url "https://nexus.ala.org.au/content/groups/public/" }
         maven { url "https://repository.gbif.org/repository/uk-nbn-releases/" }
+        maven { url "https://nexus.ala.org.au/content/groups/public/" }
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-version "5.0.1"
+version "2.0.8-NBN"
 group "au.org.ala.plugins.grails"
 
 apply plugin:"eclipse"
@@ -27,6 +27,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenLocal()
+    maven { url "https://repository.gbif.org/repository/uk-nbn-releases/" }
 	maven { url "https://nexus.ala.org.au/content/groups/public/" }
     maven { url "https://repo.grails.org/grails/core" }
 }
@@ -80,8 +81,8 @@ dependencies {
     compile "org.grails.plugins:ala-auth:3.0.4", noCache
 
     if(!inplace) {
-        compile "au.org.ala.plugins.grails:images-client-plugin:1.0", noCache
-        compile "au.org.ala.plugins.grails:ala-charts-plugin:2.0.1", noCache
+        compile "au.org.ala.plugins.grails:images-client-plugin:1.0.1-NBN", noCache
+        compile "au.org.ala.plugins.grails:ala-charts-plugin:2.0.1-NBN", noCache
     }
 
 }
@@ -131,7 +132,6 @@ publishing {
     }
     publications {
         mavenJar(MavenPublication) {
-            artifactId 'biocache-hubs-nbn'
             pom.withXml {
                 def pomNode = asNode()
                 pomNode.dependencyManagement.replaceNode {}
