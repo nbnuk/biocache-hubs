@@ -546,7 +546,13 @@ $(document).ready(function() {
         }
         var methodName = $(this).data("method");
         var url = alertsUrlPrefix + "/ws/" + methodName + "?";
-        url += "queryDisplayName="+encodeURIComponent(query);
+        //fix that's gone into ALA:
+        if (query.length >= 250) {
+            url += "queryDisplayName="+encodeURIComponent(query.substring(0, 149) + "...");
+        } else {
+            url += "queryDisplayName="+encodeURIComponent(query);
+        }
+        //end fix
         url += "&baseUrlForWS=" + encodeURIComponent(BC_CONF.biocacheServiceUrl.replace(/\/ws$/,""));
         url += "&baseUrlForUI=" + encodeURIComponent(BC_CONF.serverName);
         url += "&webserviceQuery=%2Foccurrences%2Fsearch" + BC_CONF.searchString; /* remove /ws/ */
