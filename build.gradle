@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-version "2.0.9-NBN"
+version "2.0.8-NBN-0-2"
 group "au.org.ala.plugins.grails"
 
 apply plugin:"eclipse"
@@ -128,25 +128,6 @@ publishing {
                 username = System.getenv('TRAVIS_DEPLOY_USERNAME')
                 password = System.getenv('TRAVIS_DEPLOY_PASSWORD')
             }
-        }
-    }
-    publications {
-        mavenJar(MavenPublication) {
-            pom.withXml {
-                def pomNode = asNode()
-                pomNode.dependencyManagement.replaceNode {}
-
-                // simply remove dependencies without a version
-                // version-less dependencies are handled with dependencyManagement
-                // see https://github.com/spring-gradle-plugins/dependency-management-plugin/issues/8 for more complete solutions
-                pomNode.dependencies.dependency.findAll {
-                    it.version.text().isEmpty()
-                }.each {
-                    it.replaceNode {}
-                }
-            }
-            from components.java
-
         }
     }
 }
