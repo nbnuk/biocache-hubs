@@ -552,11 +552,12 @@ $(document).ready(function() {
         } else {
             url += "queryDisplayName="+encodeURIComponent(query);
         }
+        var searchParamsEncoded = encodeURIComponent(decodeURIComponent(BC_CONF.searchString)); // prevent double encoding of chars
         //end fix
         url += "&baseUrlForWS=" + encodeURIComponent(BC_CONF.biocacheServiceUrl.replace(/\/ws$/,""));
         url += "&baseUrlForUI=" + encodeURIComponent(BC_CONF.serverName);
-        url += "&webserviceQuery=%2Foccurrences%2Fsearch" + BC_CONF.searchString; /* remove /ws/ */
-        url += "&uiQuery=%2Foccurrences%2Fsearch%3Fq%3D*%3A*";
+        url += "&webserviceQuery=%2Foccurrences%2Fsearch" + searchParamsEncoded; //Customisation note: fix is in ALA
+        url += "&uiQuery=%2Foccurrences%2Fsearch"+searchParamsEncoded; //Customisation note: fix is in ALA
         url += "&resourceName=" + encodeURIComponent(BC_CONF.resourceName);
         //console.log("url", query, methodName, url);
         window.location.href = url;
