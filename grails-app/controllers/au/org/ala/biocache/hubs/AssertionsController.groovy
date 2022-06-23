@@ -42,24 +42,9 @@ class AssertionsController {
         String assertionUuid = params.assertionUuid?: ""
         UserDetails userDetails = authService?.userDetails() // will return null if not available/not logged in
 
-        //NBN: sometimes this is null (running on localhost) because request getuserprincipal is null
-        //TODO: figure out what is happening with authentication
-        if (!userDetails) {
-            def userId = authService?.getUserId()
-            if (userId) {
-                userDetails = authService?.getUserForUserId(userId)
-            }
-        }
-
-        if (recordUuid && code && (userDetails || grailsApplication.config.localhost?.fakeuser?:'' == 'true') ) { // RR test ***
-            Map postResponse
-            if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-                log.info("Adding assertion to UUID: ${recordUuid}, code: ${code}, comment: ${comment}, userAssertionStatus: ${userAssertionStatus}, userId: 13307, userEmail: r.roberts@nbn.org.uk")
-                postResponse = webServicesService.addAssertion(recordUuid, code, comment, "13307", "r.roberts@nbn.org.uk", userAssertionStatus, assertionUuid)
-            } else {
-                log.info("Adding assertion to UUID: ${recordUuid}, code: ${code}, comment: ${comment}, userAssertionStatus: ${userAssertionStatus}, userId: ${userDetails.userId}, userEmail: ${userDetails.email}")
-                postResponse = webServicesService.addAssertion(recordUuid, code, comment, userDetails.userId, userDetails.displayName, userAssertionStatus, assertionUuid)
-            }
+        if (recordUuid && code && userDetails) {
+            log.info("Adding assertion to UUID: ${recordUuid}, code: ${code}, comment: ${comment}, userAssertionStatus: ${userAssertionStatus}, userId: ${userDetails.userId}, userEmail: ${userDetails.email}")
+            Map postResponse = webServicesService.addAssertion(recordUuid, code, comment, userDetails.userId, userDetails.displayName, userAssertionStatus, assertionUuid)
 
             if (postResponse.statusCode == 201) {
                 log.info("Called REST service. Assertion should be added" )
