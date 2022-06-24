@@ -733,33 +733,21 @@ class OccurrenceTagLib {
      * Display the logged in user (user id)
      */
     def loggedInUserId = { attrs ->
-        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-            out << "13307" // RR test ***
-        } else {
-            out << authService?.userId
-        }
+        out << authService?.userId
     }
 
     /**
      * Display the logged in user (display name)
      */
     def loggedInUserDisplayname = { attrs ->
-        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-            out << "Reuben Roberts:r.roberts@nbn.org.uk" // RR test ***
-        } else {
-            out << (authService?.displayName ?: authService?.email)
-        }
+        out << (authService?.displayName ?: authService?.email)
     }
 
     /**
      * Display the logged in user (email)
      */
     def loggedInUserEmail = { attrs ->
-        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-            out << "r.roberts@nbn.org.uk" // RR test ***
-        } else {
-            out << authService?.email
-        }
+        out << authService?.email
     }
 
     /**
@@ -832,16 +820,7 @@ class OccurrenceTagLib {
         paramsCopy.remove("wkt")
         paramsCopy.remove("action")
         paramsCopy.remove("controller")
-        def fqMultiQueryString = ""
-        if (paramsCopy.get("fq") != null && paramsCopy.get("fq").getClass().isArray()) {
-            //this is a workaround for the contents of a the fq parameter being an array instead of another mapo (which I think would be handled by toQueryString by recursion)
-            paramsCopy.get("fq").each {
-                fqMultiQueryString = fqMultiQueryString + "&fq=" +
-                        URLEncoder.encode(it.value.toString(), "UTF-8")
-            }
-            paramsCopy.remove("fq")
-        }
-        def queryString = WebUtils.toQueryString(paramsCopy) + fqMultiQueryString
+        def queryString = WebUtils.toQueryString(paramsCopy)
         log.debug "queryString = ${queryString}"
         out << queryString
     }
