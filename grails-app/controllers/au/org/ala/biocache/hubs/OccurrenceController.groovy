@@ -62,12 +62,6 @@ class OccurrenceController {
         log.debug "fq = ${requestParams.fq}"
         log.debug "deff = ${grailsApplication.config.facets.defaultFilters}"
 
-        if(requestParams.fq.length == 0 && grailsApplication.config.facets.defaultFilters){
-//            requestParams.fq = grailsApplication.config.facets.defaultFilters.toString().split(',')
-//            requestParams.fq = ['occurrence_status:"present"', '-user_assertions:(50001 OR 50005 OR 50006)']
-            params.put('fq',grailsApplication.config.facets.defaultFilters.toString().split(','));
-            return redirect(action: 'list', params: params)
-        }
 
         if (!params.pageSize) {
             requestParams.pageSize = 20
@@ -130,7 +124,7 @@ class OccurrenceController {
 
             List dynamicFacets = []
 
-            def requestedFacets = (userFacets ?: filteredFacets) as List
+            String[] requestedFacets = (userFacets ?: filteredFacets)
 
             if (grailsApplication.config.facets.includeDynamicFacets?.toString()?.toBoolean()) {
                 // Sandbox only...
@@ -139,9 +133,6 @@ class OccurrenceController {
 
 
             }
-            log.debug "requestedFacets = ${requestedFacets}"
-            requestedFacets.addAll(["identification_verification_status", "occurrence_status", "basis_of_record", "license"])
-
 
             requestParams.facets = requestedFacets
 
@@ -227,18 +218,9 @@ class OccurrenceController {
      * @return
      */
     def show(String id) {
-        if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-            def cookie = new Cookie("ALA-Auth", "r.roberts@nbn.org.uk") // RR test ***
-            response.addCookie(cookie)
-            request.cookies.each { println "${it.name} == ${it.value}, domain = ${it.domain}" }
-        }
         try {
-            String userId = ''
-            if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-                userId = "13307" // RR test ****
-            } else {
-                userId = authService?.getUserId()
-            }
+            String userId = authService?.getUserId()
+
             Boolean hasClubView = request.isUserInRole("${grailsApplication.config.clubRoleForHub}")
             JSONObject record = webServicesService.getRecord(id, hasClubView)
             log.debug "hasClubView = ${hasClubView} || ${grailsApplication.config.clubRoleForHub}"
@@ -247,14 +229,10 @@ class OccurrenceController {
                 JSONObject compareRecord = webServicesService.getCompareRecord(id)
                 JSONObject collectionInfo = null
                 JSONArray contacts = null
-                JSONObject taxon = null
 
                 if (record.processed.attribution.collectionUid) {
                     collectionInfo = webServicesService.getCollectionInfo(record.processed.attribution.collectionUid)
                     contacts = webServicesService.getCollectionContact(record.processed.attribution.collectionUid)
-                }
-                if (record.processed.classification.taxonConceptID) {
-                    taxon = webServicesService.getTaxon(record.processed.classification.taxonConceptID)
                 }
 
                 if(record.raw.attribution.dataResourceUid && (contacts == null)){
@@ -264,25 +242,13 @@ class OccurrenceController {
                         log.warn("Problem retrieving contact details for ${record.raw.attribution.dataResourceUid} - " + e.getMessage())
                     }
                 }
-                String userEmail = ''
-                if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-                    userEmail = "r.roberts@nbn.org.uk" // RR test ***
-                } else {
-                    userEmail = authService?.getEmail()
-                    log.info("User email = " + userEmail)
-                }
+                String userEmail = authService?.getEmail()
                 Boolean isCollectionAdmin = false
-                Boolean userHasRoleAdmin = false
-                if (grailsApplication.config.localhost?.fakeuser?:'' == 'true') {
-                    userHasRoleAdmin = true // RR test ***
-                } else {
-                    userHasRoleAdmin = authService?.userInRole(CASRoles.ROLE_ADMIN)
-                }
+                Boolean userHasRoleAdmin = authService?.userInRole(CASRoles.ROLE_ADMIN)
 
                 if (userHasRoleAdmin) {
                   isCollectionAdmin = true
                 } else {
-                    if (contacts != null) log.info("contacts = " + contacts)
                     if (userEmail && contacts != null && contacts.size() > 0) {
                         for (int i = 0; i < contacts.size(); i++) {
                             if (contacts.get(i).editor == true && userEmail.equalsIgnoreCase(contacts.get(i).contact.email)) {
@@ -296,10 +262,8 @@ class OccurrenceController {
                         webServicesService.getUserAssertions(id),
                         webServicesService.getQueryAssertions(id),
                         userId)
-                log.info("grouped assertions *** = " + groupedAssertions.toString())
                 Map layersMetaData = webServicesService.getLayersMetaData()
                 compareRecord = postProcessingService.augmentRecord(compareRecord) // adds some links to certain fields, etc
-                log.info("error codes = " + webServicesService.getErrorCodes())
                 [
                         record: record,
                         uuid: id,
@@ -318,9 +282,7 @@ class OccurrenceController {
                         metadataForOutlierLayers: postProcessingService.getMetadataForOutlierLayers(record, layersMetaData),
                         environmentalSampleInfo: postProcessingService.getLayerSampleInfo(ENVIRO_LAYER, record, layersMetaData),
                         contextualSampleInfo: postProcessingService.getLayerSampleInfo(CONTEXT_LAYER, record, layersMetaData),
-                        skin: grailsApplication.config.skin.layout,
-                        showFlaggedIssues: (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean(),
-                        taxon: taxon
+                        skin: grailsApplication.config.skin.layout
                 ]
             } else {
                 flash.message = "No record found with id: ${id}"
