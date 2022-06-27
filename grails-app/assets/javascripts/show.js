@@ -20,7 +20,7 @@ $(document).ready(function() {
         $('.uncheckTestResult').toggle();
     });
 
-    $('#showPassedPropResult').on('click', function(e){
+    $('#showMissingPropResult').on('click', function(e){
         $('.missingPropResult').toggle();
     });
 
@@ -259,17 +259,12 @@ $(document).ready(function() {
  * Delete a user assertion
  */
 function deleteAssertion(recordUuid, assertionUuid){
-    //alert("record uuid = " + recordUuid + ", assertion uuid = " + assertionUuid);
-    //console.log("Deleting assertion: record uuid = " + recordUuid + ", assertion uuid = " + assertionUuid);
     $.post(OCC_REC.contextPath + '/occurrences/assertions/delete',
         { recordUuid: recordUuid, assertionUuid: assertionUuid },
         function(data) {
-            //console.log("delete assertion: " + data);
             refreshUserAnnotations();
         }
-    ).error(function () {
-        console.log("Error deleting assertion");
-    });
+    );
 }
 
 /**
@@ -298,48 +293,16 @@ function getMessage(userAssertionCode) {
  */
 function refreshUserAnnotations(){
 
-    if (!NBN.showFlaggedIssues) {
-        $('#userAnnotationsDiv').hide('fast');
-        return;
-    }
-    //console.log(OCC_REC.contextPath + "/assertions/" + OCC_REC.recordUuid);
     $.get( OCC_REC.contextPath + "/assertions/" + OCC_REC.recordUuid, function(data) {
-
-        var flagRecordAsDodgy = false; //if it has any assertions with codes 50005 (unconfirmed) or 50001 (open, i.e. record is incorrect but not fixed yet) then set to true
-        //because the 50005 doesn't seem to be adjusted when a verification is applied to that issue, we need to potentially remove these
-        var flags = [];
-
-        $.each(data.userAssertions, function( index, userAssertion ) {
-            console.log(userAssertion);
-            if (userAssertion.qaStatus == 50001 || userAssertion.qaStatus == 50005) {
-                flags.push(userAssertion.uuid);
-            }
-        });
-        console.log(flags);
-        $.each(data.userAssertions, function( index, userAssertion ) {
-            if ((userAssertion.qaStatus == 50002 || userAssertion.qaStatus == 50003 || userAssertion.qaStatus == 50000) && (userAssertion.relatedUuid > "")) {
-                for (i = 0; i < flags.length; i++) {
-                    if (flags[i] == userAssertion.relatedUuid) { flags.splice(i, 1); i-- }
-                }
-            }
-        });
-        console.log(flags);
-        if (flags.length > 0) flagRecordAsDodgy = true;
 
         if (data.assertionQueries.length == 0 && data.userAssertions.length == 0) {
             $('#userAnnotationsDiv').hide('slow');
             $('#userAssertionsContainer').hide("slow");
             $('#userAnnotationsNav').css("display","none");
-            $('#userAnnotationsNavFlag').css("display","none");
-            $('#userAnnotationsNavFlagTitle').css("display","none");
         } else {
             $('#userAnnotationsDiv').show('slow');
             $('#userAssertionsContainer').show("slow");
             $('#userAnnotationsNav').css("display","block");
-            if (flagRecordAsDodgy) {
-                $('#userAnnotationsNavFlag').css("display","inline-block");
-                $('#userAnnotationsNavFlagTitle').css("display","inline-block");
-            }
         }
         $('#userAnnotationsList').empty();
 
@@ -385,9 +348,7 @@ function refreshUserAnnotations(){
                 }
 
                 //if the current user is the author of the annotation, they can delete
-                //new: the collection admin can also delete
-                console.log(OCC_REC);
-                if((OCC_REC.userId == userAssertion.userId) || NBN.isCollectionAdmin){
+                if(OCC_REC.userId == userAssertion.userId){
                     $clone.find('.deleteAnnotation').css({display:'block'});
                     $clone.find('.deleteAnnotation').attr('id', userAssertion.uuid);
                 } else {
@@ -457,43 +418,23 @@ function updateDeleteVerificationEvents(relatedAssertionId) {
         e.preventDefault();
         var isConfirmed = confirm('Are you sure you want to delete this verification ?');
         if (isConfirmed === true) {
-            console.log("working...");
             deleteAssertion(OCC_REC.recordUuid, this.parentElement.parentElement.id.split('_').pop());
         }
     });
 }
 
-function deleteAssertionPrompt(event) {
-    var isConfirmed = confirm('Are you sure you want to delete this flagged issue?');
-    if (isConfirmed === true) {
-        $('#' + event.data.qa_uuid + ' .deleteAssertionSubmitProgress').css({'display':'inline'});
-        console.log(event.data.qa_uuid);
-        deleteAssertion(event.data.rec_uuid, event.data.qa_uuid);
-    }
-}
-
 function updateDeleteEvents(enableDelete, disableDelete){
 
     for(var i = 0; i < enableDelete.length; i++){
-        console.log(i);
         $('#userAnnotation_' + enableDelete[i] + ' .deleteAnnotation').off("click");
-        $('#userAnnotation_' + enableDelete[i] + ' .deleteAnnotation').click({rec_uuid: OCC_REC.recordUuid, qa_uuid: enableDelete[i]}, deleteAssertionPrompt);
-
-        /*
         $('#userAnnotation_' + enableDelete[i] + ' .deleteAnnotation').on("click", function (e) {
             e.preventDefault();
-            console.log(e.data);
             var isConfirmed = confirm('Are you sure you want to delete this flagged issue?');
             if (isConfirmed === true) {
                 $('#' + enableDelete[i] + ' .deleteAssertionSubmitProgress').css({'display':'inline'});
-                console.log(OCC_REC);
-                console.log(enableDelete[i]);
-                console.log(i);
-                console.log(enableDelete);
                 deleteAssertion(OCC_REC.recordUuid, enableDelete[i]);
             }
         });
-        */
         updateVerificationEvents(enableDelete[i]);
     }
 
