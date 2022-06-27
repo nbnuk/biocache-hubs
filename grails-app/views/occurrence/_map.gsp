@@ -5,7 +5,7 @@
         <g:set var='spatialPortalLink' value="${sr.urlParameters}"/>
         <g:set var='spatialPortalUrlParams' value="${grailsApplication.config.spatial.params}"/>
         <a id="spatialPortalLink" class="btn btn-default btn-sm tooltips"
-           href="${grailsApplication.config.spatial.baseUrl}${spatialPortalLink}${spatialPortalUrlParams}" title="Continue analysis in the Spatial Portal">
+           href="${grailsApplication.config.spatial.baseUrl}${spatialPortalLink}${spatialPortalUrlParams}" title="Continue analysis in ALA Spatial Portal">
             <i class="fa fa-map-marker"></i>&nbsp&nbsp;<g:message code="map.spatialportal.btn.label" default="View in spatial portal"/></a>
     </g:if>
     <a href="#downloadMap" role="button" data-toggle="modal" class="btn btn-default btn-sm tooltips" title="Download image file (single colour mode)">
@@ -30,31 +30,21 @@
                 <label for="colourBySelect"><g:message code="map.maplayercontrols.tr01td01.label" default="Colour by"/>:&nbsp;</label>
                 <div class="layerControls">
                     <select name="colourBySelect" id="colourBySelect" onchange="changeFacetColours();return true;">
-                        <optgroup label="Ordnance Survey Grids">
-                            <option value="variablegrid" ${(defaultColourBy == 'variablegrid')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option.variablegrid" default="Variable grids"/></option>
-                            <option value="singlegrid" ${(defaultColourBy == 'singlegrid')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option.responsive" default="Responsive grids"/></option>
-                            <option value="10kgrid" ${(defaultColourBy == '10kgrid')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option.10kmgrid" default="10km grids"/></option>
-                            <option value="grid" ${(defaultColourBy == 'grid')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option02" default="Record density grid"/></option>
-                            <option disabled role="separator">————————————</option>
-                        </optgroup>
-                        <optgroup label="Display as points">
-                            <option value="" ${(defaultColourBy == 'basis_of_record')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option01" default="Points - default colour"/></option>
-
-                            <g:each var="facetResult" in="${facets}">
-                                <g:set var="Defaultselected">
-                                    <g:if test="${defaultColourBy && facetResult.fieldName == defaultColourBy}">selected="selected"</g:if>
-                                </g:set>
-                                %{-- <g:if test="${facetResult.fieldName == 'occurrence_year'}">${facetResult.fieldName = 'decade'}</g:if> --}%
-                                <g:if test="${facetResult.fieldName == 'uncertainty'}">${facetResult.fieldName = 'coordinate_uncertainty'}</g:if>
-                                <g:if test="${facetResult.fieldResult.size() > 0}">
-                                  %{-- the test 'fieldResult.size > 1' is to exclude single-value filters
-                                    -- For testing show 1 fieldResult, e.g. geospatial_kosher --}%
-                                    <option value="${facetResult.fieldName}" ${Defaultselected}>
-                                        <alatag:formatDynamicFacetName fieldName="${facetResult.fieldName}"/>
-                                    </option>
-                                </g:if>
-                            </g:each>
-                        </optgroup>
+                        <option value=""><g:message code="map.maplayercontrols.tr01td01.option01" default="Points - default colour"/></option>
+                        <option value="grid" ${(defaultColourBy == 'grid')?'selected=\"selected\"':''}><g:message code="map.maplayercontrols.tr01td01.option02" default="Record density grid"/></option>
+                        <option disabled role="separator">————————————</option>
+                        <g:each var="facetResult" in="${facets}">
+                            <g:set var="Defaultselected">
+                                <g:if test="${defaultColourBy && facetResult.fieldName == defaultColourBy}">selected="selected"</g:if>
+                            </g:set>
+                            <g:if test="${facetResult.fieldName == 'occurrence_year'}">${facetResult.fieldName = 'decade'}</g:if>
+                            <g:if test="${facetResult.fieldName == 'uncertainty'}">${facetResult.fieldName = 'coordinate_uncertainty'}</g:if>
+                            <g:if test="${facetResult.fieldResult.size() > 1}">
+                                <option value="${facetResult.fieldName}" ${Defaultselected}>
+                                    <alatag:formatDynamicFacetName fieldName="${facetResult.fieldName}"/>
+                                </option>
+                            </g:if>
+                        </g:each>
                     </select>
                 </div>
             </td>
@@ -461,14 +451,11 @@
         var pointSize = $('#sizeslider-val').html();
         var opacity = $('#opacityslider-val').html();
         var outlineDots = $('#outlineDots').is(':checked');
-        var defaultPointColour = "${grailsApplication.config.map.pointColour}";
 
         var envProperty = "color:${grailsApplication.config.map.pointColour};name:circle;size:"+pointSize+";opacity:"+opacity
 
         if(colourByFacet){
-            if(colourByFacet == "variablegrid" || colourByFacet == "singlegrid" || colourByFacet == "10kgrid"){
-                   envProperty = "colormode:osgrid;gridlabels:true;gridres:" + colourByFacet + ";opacity:1;color:" + defaultPointColour;
-            } else if(colourByFacet == "gridVariable"){
+            if(colourByFacet == "gridVariable"){
                 colourByFacet = "coordinate_uncertainty"
                 envProperty = "colormode:coordinate_uncertainty;name:circle;size:"+pointSize+";opacity:1;cellfill:0xffccff;variablegrids:on"
             } else {
@@ -480,12 +467,7 @@
             1: 256, 2:128, 3: 64, 4:32, 5:16, 6:8
         }
 
-        var wmsURL = MAP_VAR.mappingUrl + "/mapping/wms/reflect" + MAP_VAR.query + MAP_VAR.additionalFqs;
-        if(!colourByFacet || colourByFacet != 'occurrence_status'){
-            wmsURL = wmsURL + "&fq=-occurrence_status:absent"
-        }
-
-        var layer = L.tileLayer.wms(wmsURL, {
+        var layer = L.tileLayer.wms(MAP_VAR.mappingUrl + "/mapping/wms/reflect" + MAP_VAR.query + MAP_VAR.additionalFqs, {
             layers: 'ALA:occurrences',
             format: 'image/png',
             transparent: true,
@@ -504,15 +486,6 @@
              } else if (colourByFacet == 'grid') {
                  $('.legendTable').html('');
                  addGridLegendItem();
-             } else if (colourByFacet == 'variablegrid') {
-                $('.legendTable').html('');
-                addGridVariableLegendItem();
-             } else if (colourByFacet == '10kgrid') {
-                $('.legendTable').html('');
-                add10kmLegendItem(defaultPointColour);
-             } else if (colourByFacet == 'singlegrid') {
-                $('.legendTable').html('');
-                addResponsiveLegendItem(defaultPointColour);
              } else {
                 //update the legend
                 $('.legendTable').html('<tr><td>Loading legend....</td></tr>');
@@ -580,80 +553,7 @@
         );
     }
 
-    function addGridVariableLegendItem(){
-
-        /* keep colours consistent with biocache-service au/org/ala/biocache/web/WMSOSGridController.java renderGrid */
-    var gridColours = [
-        {title:'100km', colour:'03FFFB'},
-        {title:'50km', colour:'FF8D00'},
-        {title:'10km', colour:'FFFF00'},
-        {title:'2km', colour:'0000FF'},
-        {title:'1km', colour:'00FF00'},
-        {title:'100m', colour:'FF0000'}
-    ];
-
-    var $legendTable = $(".legendTable");
-    for(var i=0; i<gridColours.length; i++){
-
-        $legendTable.append($('<tr>')
-            .append($('<td>')
-                .append(
-                    $('<i>')
-                    .addClass('legendColour')
-                    .addClass('legendGridColour')
-                    .attr('style', "background-color:#"+ gridColours[i].colour + ";")
-                    .attr('id', 'defaultLegendColour')
-                )
-                .append(
-                    $('<span>')
-                        .addClass('legendItemName')
-                        .html(gridColours[i].title)
-                    )
-                )
-            );
-        }
-    }
-
-    function addResponsiveLegendItem(pointColour){
-        var $legendTable = $(".legendTable");
-        $legendTable.append($('<tr>')
-            .append($('<td>')
-                .append($('<i>')
-                    .addClass('legendColour')
-                    .addClass('legendGridColour')
-                    .attr('style', "background-color:#"+ pointColour + ";")
-                    .attr('id', 'defaultLegendColour')
-                )
-                .append(
-                    $('<span>')
-                        .addClass('legendItemName')
-                        .html("Responsive grids")
-                )
-            )
-        );
-    }
-
-
-    function add10kmLegendItem(pointColour){
-        var $legendTable = $(".legendTable");
-        $legendTable.append($('<tr>')
-            .append($('<td>')
-                .append($('<i>')
-                    .addClass('legendColour')
-                    .addClass('legendGridColour')
-                    .attr('style', "background-color:#"+ pointColour + ";")
-                    .attr('id', 'defaultLegendColour')
-                )
-            .append($('<span>')
-                .addClass('legendItemName')
-                .html("10km grids")
-            )
-            )
-        );
-    }
-
     function addGridLegendItem(){
-
         $(".legendTable")
             .append($('<tr>')
                 .append($('<td>')
@@ -790,71 +690,6 @@
         var mapQuery = MAP_VAR.query.replace(/&(?:lat|lon|radius)\=[\-\.0-9]+/g, ''); // remove existing lat/lon/radius/wkt params
         MAP_VAR.map.spin(true);
 
-        if(colourBySelect == "variablegrid" || colourBySelect == "singlegrid" || colourBySelect == "10kgrid"){
-        //    if(colourSelect == "variablegrid" || colourSelect == "singlegrid" || colourSelect == "10kgrid"){
-
-        //change the call depending on which layer is active....
-        $.ajax({
-            url: MAP_VAR.mappingUrl + "/osgrid/feature.json" + mapQuery + MAP_VAR.removeFqs,
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {
-                zoom: MAP_VAR.map.getZoom(),
-                lat: e.latlng.lat,
-                lon: e.latlng.lng,
-                format: "json"
-            },
-            success: function(response) {
-
-                MAP_VAR.map.spin(false);
-                if(MAP_VAR.highlight != null){
-                    MAP_VAR.map.removeLayer(MAP_VAR.highlight);
-                    MAP_VAR.highlight = null;
-                }
-
-                    if(response.gridRef)	{
-                    var link = "${request.contextPath}/occurrences/search" + MAP_VAR.query.replace(/&(?:lat|lon|radius)\=[\-\.0-9]+/g, '') + '&fq=' + response.filterQuery;
-                    link = link.replace(/\#tab\_mapView/g,'') + '#tab_recordsView';
-
-                    var popup = L.popup()
-                        .setLatLng(e.latlng)
-                        .setContent(
-                            "<h4>OS Grid: " + response.gridRef + " </h4>" +
-                            "<h4>" + response.recordCount + " records</h4>" +
-                            "<span>Grid size = " + response.gridSize + "</span><br/>" +
-                            "<div class='recordLink'" + "<g:if test="${grailsApplication.config.map?.recordopennewwindow}">style='width:100%'</g:if>" + ">" +
-                            "<a href=\"" + link.replace(/["]/g,"%22") + "\" class='btn btn-mini' " +
-    "<g:if test="${grailsApplication.config.map?.recordopennewwindow}"> target='_new'</g:if>" + ">View&nbsp;records" + '<g:if test="${grailsApplication.config.map?.recordopennewwindow}">&nbsp;<asset:image src="newtab.gif"/></g:if>' + "</a>" +
-                            "</div>"
-                        )
-                        .openOn(MAP_VAR.map);
-                    //draw bounding box
-                    var route = [
-                          new L.LatLng(response.sw[0], response.sw[1]),
-                          new L.LatLng(response.se[0], response.se[1]),
-                          new L.LatLng(response.ne[0], response.ne[1]),
-                          new L.LatLng(response.nw[0], response.nw[1])
-                    ];
-
-                    MAP_VAR.highlight = new L.Polygon(route, {color: "#0000ff", weight: 5});
-                    MAP_VAR.highlight.addTo(MAP_VAR.map)
-
-                    //
-                    //
-                    //var bounds = [[response.minLat, response.minLng], [response.maxLat, response.maxLng]];
-                    //MAP_VAR.highlight = L.rectangle(bounds, {color: "#0000ff", weight: 3});
-                    //MAP_VAR.highlight.addTo(MAP_VAR.map);
-                    MAP_VAR.map.spin(false);
-                    }
-            },
-            error: function() {
-                MAP_VAR.map.spin(false);
-            }
-        });
-
-
-    } else {
-
         $.ajax({
             url: MAP_VAR.mappingUrl + "/occurrences/info" + mapQuery + MAP_VAR.removeFqs,
             jsonp: "callback",
@@ -884,7 +719,6 @@
             },
 
         });
-    }
     }
 
     /**
@@ -1340,37 +1174,24 @@
             baseLayer = baseMapValue.substring(10);
         }
 
-        var mapLayout =
-            '&extents=' + extents +  //need to retrieve the
-            '&format=' + $('#format').val() +
-            '&dpi=' + $('#dpi').val() +
-            '&pradiusmm=' + $('#pradiusmm').val() +
-            '&popacity=' + $('#popacity').val() +
-            '&pcolour=' + $(':input[name=pcolour]').val().replace('#','').toUpperCase() +
-            '&widthmm=' + $('#widthmm').val() +
-            '&scale=' + $(':input[name=scale]:checked').val() +
-            '&outline=' + $(':input[name=outline]:checked').val() +
-            '&outlineColour=0x000000' +
-            '&baselayer=' + baseLayer +
-            '&baseMap=' + baseMap;
-
         var downloadUrl =  $('#mapDownloadUrl').val() +
                 '${raw(sr.urlParameters)}' +
-                mapLayout +
+                '&extents=' + extents +  //need to retrieve the
+                '&format=' + $('#format').val() +
+                '&dpi=' + $('#dpi').val() +
+                '&pradiusmm=' + $('#pradiusmm').val() +
+                '&popacity=' + $('#popacity').val() +
+                '&pcolour=' + $(':input[name=pcolour]').val().replace('#','').toUpperCase() +
+                '&widthmm=' + $('#widthmm').val() +
+                '&scale=' + $(':input[name=scale]:checked').val() +
+                '&outline=' + $(':input[name=outline]:checked').val() +
+                '&outlineColour=0x000000' +
+                '&baselayer=' + baseLayer +
+                '&baseMap=' + baseMap +
                 '&fileName=' + $('#fileName').val()+'.'+$('#format').val().toLowerCase();
-
-
-        var downloadUrlNew = '/download?' +
-                'searchParams=' + encodeURIComponent('${raw(sr.urlParameters)}') +
-                '&targetUri=/occurrences/search' +
-                '&totalRecords=1' + //needed?
-                '&downloadType=map' +
-                '&mapLayoutParams=' + encodeURIComponent(mapLayout) +
-                '&file=' + $('#fileName').val();
-
 
         //console.log('downloadUrl', downloadUrl);
         $('#downloadMap').modal('hide');
-        document.location.href = downloadUrlNew;
+        document.location.href = downloadUrl;
     }
 </script>
