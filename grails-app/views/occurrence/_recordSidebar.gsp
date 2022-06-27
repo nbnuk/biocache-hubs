@@ -1,4 +1,4 @@
-<g:if test="${isUnderCas && !isReadOnly && record.processed.attribution.provenance != 'Draft' && (grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()}">
+<g:if test="${isUnderCas && !isReadOnly && record.processed.attribution.provenance != 'Draft'}">
     <button class="btn btn-default" id="assertionButton" href="#loginOrFlag" role="button" data-toggle="modal" title="report a problem or suggest a correction for this record">
         <span id="loginOrFlagSpan" title="Flag an issue" class=""><i class="glyphicon glyphicon-flag"></i> <g:message code="show.button.assertionbutton.span" default="Flag an issue"/></span>
     </button>
@@ -6,52 +6,13 @@
 <g:if test="${contacts && contacts.size()}">
     <button href="#contactCuratorView" class="btn btn-default" id="showCurator" role="button" data-toggle="modal"
             title="Contact curator for more details on a record">
-        <span id="contactCuratorSpan" href="#contactCuratorView" title=""><i class="glyphicon glyphicon-envelope"></i>Contact data provider</span>
+        <span id="contactCuratorSpan" href="#contactCuratorView" title=""><i class="glyphicon glyphicon-envelope"></i> <g:message code="show.showcontactcurator.span" default="Contact curator"/></span>
     </button>
 </g:if>
 %{--<div class="nav-affix" data-spy="affix" data-offset-top="236" data-offset-bottom="1080">--}%
 <div class="" >
-    <g:if test="${record.processed.attribution.license}">
-        <div class="sidebar">
-            <p style="margin-bottom:20px;margin-top:20px;">
-                <b>
-                ${ 'Licence: ' }
-                <a href="https://docs.nbnatlas.org/data-licenses/" target="_blank">${ record.processed.attribution.license }</a>
-                </b>
-            </p>
-        </div>
-    </g:if>
-
-    <g:if test="${record.raw.lastModifiedTime && record.processed.lastModifiedTime}">
-        <div class="sidebar">
-            <g:set var="rawLastModifiedString" value="${record.raw.lastModifiedTime.substring(0,10)}"/>
-            <g:set var="processedLastModifiedString" value="${record.processed.lastModifiedTime.substring(0,10)}"/>
-            <p style="margin-bottom:20px;margin-top:20px;">
-                <g:message code="show.sidebar05.p01" default="Date loaded"/>: ${rawLastModifiedString}<br/>
-                <g:message code="show.sidebar05.p02" default="Date last processed"/>: ${processedLastModifiedString}<br/>
-            </p>
-        </div>
-    </g:if>
-
-    <g:if test="${false}">
     <ul id="navBox" class="nav nav-pills nav-stacked">
-        <li><a href="#occurrenceRecord">Record</a></li>
         <li><a href="#occurrenceDataset"><g:message code="recordcore.occurencedataset.title" default="Dataset"/></a></li>
-
-        <g:if test="${record.raw.occurrence.individualCount ||
-                        record.raw.occurrence.organismQuantity ||
-                        record.raw.occurrence.organismQuantityType ||
-                        record.raw.occurrence.sampleSizeUnit ||
-                        record.raw.occurrence.sampleSizeValue}">
-            <li><a href="#occurrenceAbundance">Abundance</a></li>
-        </g:if>
-
-        <g:if test="${record.raw.occurrence.lifeStage || record.raw.occurrence.behavior || record.raw.occurrence.sex ||
-                record.raw.occurrence.organismRemarks ||
-                record.raw.occurrence.organismScope}">
-            <li><a href="#occurrenceOrganism">Organism</a></li>
-        </g:if>
-
         <li><a href="#occurrenceEvent"><g:message code="recordcore.occurenceevent.title" default="Event"/></a></li>
         <li><a href="#occurrenceTaxonomy"><g:message code="recordcore.occurencetaxonomy.title" default="Taxonomy"/></a></li>
         <li><a href="#occurrenceGeospatial"><g:message code="recordcore.occurencegeospatial.title" default="Geospatial"/></a></li>
@@ -64,7 +25,7 @@
         <g:if test="${record.sounds}">
             <li><a href="#soundsHeader"><g:message code="show.soundsheader.title" default="Sounds"/></a></li>
         </g:if>
-        <li><a href="#userAnnotationsDiv" id="userAnnotationsNav" style="display:none;"><g:message code="show.userannotationsdiv.title" default="User flagged issues"/>&nbsp;<i id="userAnnotationsNavFlag" class="glyphicon glyphicon-flag" style="color:red;display:none"></i></a></li>
+        <li><a href="#userAnnotationsDiv" id="userAnnotationsNav" style="display:none;"><g:message code="show.userannotationsdiv.title" default="User flagged issues"/></a></li>
         <g:if test="${record.systemAssertions && record.processed.attribution.provenance != 'Draft'}">
             <li><a href="#dataQuality"><g:message code="show.dataquality.title" default="Data quality tests"/>
             (${record.systemAssertions.failed?.size()?:0} <i class="fa fa-times-circle tooltips" style="color:red;" title="<g:message code="assertions.failed" default="failed"/>"></i>,
@@ -87,8 +48,6 @@
             <li><a href="#environmentalSampleInfo"><g:message code="show.outlierinformation.02.title02" default="Environmental sampling for this location"/></a></li>
         </g:if>
     </ul>
-    </g:if>
-
     <g:if test="${false && record.processed.attribution.provenance != 'Draft'}">
         <div class="sidebar">
             <div id="warnings">
@@ -164,7 +123,7 @@
                     </g:each>
                 </div>
 
-                <div id="userAssertionsContainer" <g:if test="${(!record.userAssertions && !queryAssertions) || !(grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()}">style="display:none"</g:if>>
+                <div id="userAssertionsContainer" <g:if test="${!record.userAssertions && !queryAssertions}">style="display:none"</g:if>>
                     <h3><g:message code="show.userassertionscontainer.title" default="User flagged issues"/></h3>
                     <ul id="userAssertions">
                         <!--<p class="half-padding-bottom">Users have highlighted the following possible issues:</p>-->
@@ -313,6 +272,16 @@
             </p>
         </div>
     </g:if>
+    <g:if test="${record.raw.lastModifiedTime && record.processed.lastModifiedTime}">
+        <div class="sidebar">
+            <g:set var="rawLastModifiedString" value="${record.raw.lastModifiedTime.substring(0,10)}"/>
+            <g:set var="processedLastModifiedString" value="${record.processed.lastModifiedTime.substring(0,10)}"/>
+            <p style="margin-bottom:20px;margin-top:20px;">
+                <g:message code="show.sidebar05.p01" default="Date loaded"/>: ${rawLastModifiedString}<br/>
+                <g:message code="show.sidebar05.p02" default="Date last processed"/>: ${processedLastModifiedString}<br/>
+            </p>
+        </div>
+    </g:if>
 </div>
 <!-- BS modal flag-an-issue -->
 <div id="loginOrFlag" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginOrFlagLabel" ><!-- BS modal div -->
@@ -323,8 +292,7 @@
                 <h3 id="loginOrFlagLabel"><g:message code="show.loginorflag.title" default="Flag an issue"/></h3>
             </div>
             <div class="modal-body">
-                <g:if test="${!userId && (grailsApplication.config.localhost?.fakeuser?:'' != 'true')}">
-
+                <g:if test="${!userId}">
                     <div style="margin: 20px 0;"><g:message code="show.loginorflag.div01.label" default="Login please:"/>
                         <a href="${grailsApplication.config.security.cas.casServerLoginUrl}?service=${serverName}${request.contextPath}/occurrences/${record.raw.rowKey}"><g:message code="show.loginorflag.div01.navigator" default="Click here"/></a>
                     </div>
