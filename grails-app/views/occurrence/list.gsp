@@ -9,7 +9,7 @@
 <g:set var="startPageTime" value="${System.currentTimeMillis()}"/>
 <g:set var="queryDisplay" value="${sr?.queryTitle ?: searchRequestParams?.displayString ?: ''}"/>
 <g:set var="searchQuery" value="${grailsApplication.config.skin?.useAlaBie?.toBoolean() ? 'taxa' : 'q'}"/>
-<g:set var="authService" bean="authService"/>
+<g:set var="authService" bean="authService"></g:set>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,10 +103,8 @@
 <body class="occurrence-search-">
     <div id="listHeader" class="heading-bar row">
         <div class="col-sm-5 col-md-5">
-            <h1>
-                <alatag:message code="search.heading.list" default="Search results"/>
-                <a name="resultsTop">&nbsp;</a>
-            </h1>
+            <h1><alatag:message code="search.heading.list" default="Search results"></alatag:message><a
+        name="resultsTop">&nbsp;</a></h1>
         </div>
 
         <div id="searchBoxZ" class="text-right col-sm-7 col-md-7">
@@ -183,8 +181,8 @@
         <div class="clearfix row" id="searchInfoRow">
             <!-- facet column -->
             <div class="col-md-3 col-sm-3">
-                <!-- Trigger the modal with a button was styled btn-default btn-sm -->
-                <a class="btn tooltips btn-primary" data-toggle="modal" data-target="#facetConfigDialog" href="#"
+                <!-- Trigger the modal with a button -->
+                <a class="btn tooltips btn-default btn-sm" data-toggle="modal" data-target="#facetConfigDialog" href="#"
                    title="Customise the contents of this column">
                     <i class="fa fa-cog"></i>&nbsp;&nbsp;<g:message code="search.filter.customise"/>
                 </a>
@@ -249,13 +247,21 @@
                         ${flash.message}
                     </div>
                 </g:if>
+                <g:if test="${grailsApplication.config.useDownloadPlugin?.toBoolean()}">
+                    <div id="downloads" class="btn btn-primary pull-right">
+                        <a href="${g.createLink(uri: '/download')}?searchParams=${sr?.urlParameters?.encodeAsURL()}&targetUri=${(request.forwardURI)}&totalRecords=${sr.totalRecords}"
+                           class="tooltips newDownload"
+                           title="Download all ${g.formatNumber(number: sr.totalRecords, format: "#,###,###")} records"><i
+                                class="fa fa-download"></i>
+                            &nbsp;&nbsp;<g:message code="list.downloads.navigator" default="Download"/></a>
+                    </div>
+                </g:if>
                 <div id="resultsReturned">
                     <g:render template="sandboxUploadSourceLinks" model="[dataResourceUid: selectedDataResource]"/>
                     <span id="returnedText"><strong><g:formatNumber number="${sr.totalRecords}"
                                                                     format="#,###,###"/></strong> <g:message
                             code="list.resultsretuened.span.returnedtext" default="results for"/></span>
                     <span class="queryDisplay"><strong>${raw(queryDisplay)}</strong></span>&nbsp;&nbsp;
-%{--                    <span style="font-style:italic;display:block">Some of the displayed records may not be available for commercial use.  </span>--}%
                     %{--<g:set var="hasFq" value="${false}"/>--}%
                     <g:if test="${sr.activeFacetMap?.size() > 0 || params.wkt || params.radius}">
                         <div class="activeFilters">
@@ -323,10 +329,8 @@
                         </div>
                     </div>
                 </div>
-
             </div><!-- /.col-md-9 -->
         </div><!-- /#searchInfoRow -->
-
         <!--  Second row - facet column and results column -->
         <div class="row" id="content">
             <div class="col-sm-3 col-md-3">
@@ -405,13 +409,6 @@
                                                                                              default="Record images"/></a>
                             </li>
                         </g:if>
-                        <g:if test="${grailsApplication.config.useDownloadPlugin?.toBoolean()}">
-                            <li>
-                                <a id="t7" href="#overview" data-toggle="tab">
-                                    <g:message code="list.link.t7" default="Overview and download"/>
-                                </a>
-                            </li>
-                        </g:if>
                     </ul>
                 </div>
 
@@ -441,7 +438,7 @@
 
                             <div id="sortWidgets" class="col-sm-8 col-md-8">
                                 <span class="hidden-sm"><g:message code="list.sortwidgets.span01"
-                                                                      default="per"/></span> <g:message
+                                                                      default="per"/></span><g:message
                                     code="list.sortwidgets.span02" default="page"/>:
                                 <select id="per-page" name="per-page" class="input-small">
                                     <g:set var="pageSizeVar" value="${params.pageSize ?: params.max ?: "20"}"/>
@@ -450,6 +447,7 @@
                                     <option value="50" <g:if test="${pageSizeVar == "50"}">selected</g:if>>50</option>
                                     <option value="100" <g:if test="${pageSizeVar == "100"}">selected</g:if>>100</option>
                                 </select>&nbsp;
+                            <g:set var="useDefault" value="${(!params.sort && !params.dir) ? true : false}"/>
                             <g:message code="list.sortwidgets.sort.label" default="sort"/>:
                                 <select id="sort" name="sort" class="input-small">
                                     <option value="score" <g:if test="${params.sort == 'score'}">selected</g:if>><g:message
@@ -461,14 +459,14 @@
                                             <g:if test="${params.sort == 'common_name'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option03" default="Common name"/></option>
                                     <option value="occurrence_date"
-                                            <g:if test="${!params.sort || params.sort == 'occurrence_date'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
+                                            <g:if test="${params.sort == 'occurrence_date'}">selected</g:if>>${skin == 'avh' ? g.message(code: "list.sortwidgets.sort.option0401", default: "Collecting date") : g.message(code: "list.sortwidgets.sort.option0402", default: "Record date")}</option>
                                     <g:if test="${skin != 'avh'}">
                                         <option value="record_type"
                                                 <g:if test="${params.sort == 'record_type'}">selected</g:if>><g:message
                                                 code="list.sortwidgets.sort.option05" default="Record type"/></option>
                                     </g:if>
                                     <option value="first_loaded_date"
-                                            <g:if test="${params.sort == 'first_loaded_date'}">selected</g:if>><g:message
+                                            <g:if test="${useDefault || params.sort == 'first_loaded_date'}">selected</g:if>><g:message
                                             code="list.sortwidgets.sort.option06" default="Date added"/></option>
                                     <option value="last_assertion_date"
                                             <g:if test="${params.sort == 'last_assertion_date'}">selected</g:if>><g:message
@@ -479,7 +477,7 @@
                                     <option value="asc" <g:if test="${params.dir == 'asc'}">selected</g:if>><g:message
                                             code="list.sortwidgets.dir.option01" default="Ascending"/></option>
                                     <option value="desc"
-                                            <g:if test="${!params.dir || params.dir == 'desc'}">selected</g:if>><g:message
+                                            <g:if test="${useDefault || params.dir == 'desc'}">selected</g:if>><g:message
                                             code="list.sortwidgets.dir.option02" default="Descending"/></option>
                                 </select>
                             </div><!-- sortWidget -->
@@ -589,99 +587,7 @@
                             </div>
                         </div><!-- end #imagesWrapper -->
                     </g:if>
-                    <g:if test="${grailsApplication.config.useDownloadPlugin?.toBoolean()}">
-                        <div id="overview" class="tab-pane">
-                            <g:set var="maxDownloadExceeded" value="${grailsApplication.config.maxDownloadRecords && Integer.parseInt(grailsApplication.config.maxDownloadRecords) < sr.totalRecords}"/>
-                            <g:set var="unconfirmedIdentificationCount" value="${
-                                (sr.facetResults?.find{it.fieldName=="identification_verification_status"}?.fieldResult.find{it.label=="Unconfirmed"}?.count ?: 0) +
-                                (sr.facetResults?.find{it.fieldName=="identification_verification_status"}?.fieldResult.find{it.label=="Unconfirmed - not reviewed"}?.count ?: 0) +
-                                (sr.facetResults?.find{it.fieldName=="identification_verification_status"}?.fieldResult.find{it.label=="Unconfirmed - plausible"}?.count ?: 0)
-                            }"/>
-                            <g:set var="absenceCount" value="${sr.facetResults?.find{it.fieldName=="occurrence_status"}?.fieldResult?.find{it.label=="absent"}?.count}"/>
-                            <g:set var="fossilCount" value="${sr.facetResults?.find{it.fieldName=="basis_of_record"}?.fieldResult?.find{it.label=="Fossil specimen"}?.count}"/>
-                            <g:set var="licenceCount" value="${sr.facetResults?.find{it.fieldName=="license"}?.fieldResult?.find{it.label=="CC-BY-NC"}?.count}"/>
-                            <g:set var="buttonCount" value="${(unconfirmedIdentificationCount > 0 ? 1 : 0) + (absenceCount > 0 ? 1 : 0) + (fossilCount > 0 ? 1 : 0) + (licenceCount > 0 ? 1 : 0)}"/>
-                            <g:set var="absenceFilterPresent" value="${sr.activeFacetMap["-occurrence_status"]?.value == '"absent"'}" />
-%{--                            ${absenceFilterPresent}--}%
-
-                            <h3><g:message code="list.overviewtab.title" default="Overview"/></h3>
-                            <g:if test="${buttonCount > 0}">
-                            %{-- <p><g:message code="list.overviewtab.description" default="Here you can refine your results before downloading them."/></p>--}%
-                                <p><g:message code="list.overviewtab.description" default="Use the button${buttonCount>1 ? "s" : ""} if you wish to remove the following records from your download:"/></p>
-                            </g:if>
-                            <g:else>
-                                <p><g:message code="list.overviewtab.descriptionempty" default="There are no records that can be excluded, use the download button to continue:"/></p>
-                            </g:else>
-                            <ul class="list-group exclude-helpers">
-                                <li class="list-group-item">
-                                    <label><span class="count unconfirmed-identification-count"><g:formatNumber number="${unconfirmedIdentificationCount ?: 0}" format="###,###,###,##0"/></span> unconfirmed identifications</label>
-                                    <g:if test="${unconfirmedIdentificationCount > 0}">
-                                        <g:if test="${sr.totalRecords == unconfirmedIdentificationCount}">
-                                            <a class="btn btn-primary disabled exclude">You cannot exclude all records</a>
-                                        </g:if>
-                                        <g:else>
-                                            <a href='${sr.query}&fq=-(identification_verification_status%3A"Unconfirmed" OR identification_verification_status%3A"Unconfirmed - not reviewed" OR identification_verification_status%3A"Unconfirmed - plausible")' class="btn btn-primary exclude">Exclude unconfirmed identifications</a>
-                                        </g:else>
-                                    </g:if>
-                                </li>
-                                <li class="list-group-item">
-                                    <label><span class="count absence-record-count"><g:formatNumber number="${absenceCount ?: 0}" format="###,###,###,##0"/></span> absence records ${absenceFilterPresent ? "(excluded by default)" : ""}</label>
-                                    <g:if test="${absenceCount > 0}">
-                                        <g:if test="${sr.totalRecords == absenceCount}">
-                                            <a class="btn btn-primary disabled exclude">You cannot exclude all records</a>
-                                        </g:if>
-                                        <g:else>
-                                            <a href="${sr.query}&fq=-occurrence_status:absent" class="btn btn-primary exclude">Exclude absence records</a>
-                                        </g:else>
-                                    </g:if>
-                                </li>
-                                <li class="list-group-item">
-                                    <label><span class="count fossil-record-count"><g:formatNumber number="${fossilCount ?: 0}" format="###,###,###,##0"/></span> fossil records</label>
-                                    <g:if test="${fossilCount > 0}">
-                                        <g:if test="${sr.totalRecords == fossilCount}">
-                                            <a class="btn btn-primary disabled exclude">You cannot exclude all records</a>
-                                        </g:if>
-                                        <g:else>
-                                            <a href="${sr.query}&fq=-basis_of_record:FossilSpecimen" class="btn btn-primary exclude">Exclude fossil records</a>
-                                        </g:else>
-                                    </g:if>
-                                </li>
-                                <li class="list-group-item">
-                                    <label><span class="count cc-by-nc-count"><g:formatNumber number="${licenceCount ?: 0}" format="###,###,###,##0"/></span> records with a CC-BY-NC licence*</label>
-                                    <g:if test="${licenceCount > 0}">
-                                        <g:if test="${sr.totalRecords == licenceCount}">
-                                            <a class="btn btn-primary disabled exclude">You cannot exclude all records</a>
-                                        </g:if>
-                                        <g:else>
-                                            <a href="${sr.query}&fq=-license:CC-BY-NC" class="btn btn-primary exclude">Exclude CC-BY-NC licensed records</a>
-                                        </g:else>
-                                    </g:if>
-                                </li>
-                            </ul>
-%{--                            ${sr}--}%
-                            <div class="footer-text">* You cannot use these records for commercial purposes without the prior agreement of the data provider. Please check the licence conditions and non-commercial use guidance <a href="${grailsApplication.config.downloads?.termsOfUseUrl?:""}">here</a>.</div>
-                            <br>
-%{--                            <h4>Sensitive species</h4>--}%
-%{--                            <p>Your search may include records of sensitive species. Their locations may have been blurred to protect them from unnecessary harm. Higher resolution records of sensitive species may be available from the data provider.</p>--}%
-
-                            <div id="downloads" class="btn btn-primary pull-right">
-                                <g:if test="${maxDownloadExceeded}">
-                                    <a href="javascript:void(0)"
-                                       class="tooltips newDownload"
-                                       title="Maximum records that can be downloaded is ${g.formatNumber(number: grailsApplication.config.maxDownloadRecords, format: "#,###,###")}. Please apply filters before downloading."
-                                    >
-                                </g:if>
-                                <g:else>
-                                    <a href="${g.createLink(uri: '/download')}?searchParams=${sr?.urlParameters?.encodeAsURL()}&targetUri=${(request.forwardURI)}&totalRecords=${sr.totalRecords}"
-                                       class="tooltips newDownload"
-                                       title="Download all ${g.formatNumber(number: sr.totalRecords, format: "#,###,###")} records"
-                                    >
-                                </g:else>
-                                <i class="fa fa-download"></i>&nbsp;&nbsp;<g:message code="list.downloads.navigator" default="Download"/></a>
-                            </div>
-
-                        </div>
-                    </g:if>
+                    <g:render template="nbnOverviewAndDownload" />
                 </div><!-- end .css-panes -->
                 <form name="raw_taxon_search" class="rawTaxonSearch" id="rawTaxonSearchForm"
                       action="${request.contextPath}/occurrences/search/taxa" method="POST">
