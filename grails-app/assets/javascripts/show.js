@@ -20,7 +20,7 @@ $(document).ready(function() {
         $('.uncheckTestResult').toggle();
     });
 
-    $('#showMissingPropResult').on('click', function(e){
+    $('#showPassedPropResult').on('click', function(e){
         $('.missingPropResult').toggle();
     });
 
@@ -298,7 +298,7 @@ function getMessage(userAssertionCode) {
  */
 function refreshUserAnnotations(){
 
-    if (!showFlaggedIssues) {
+    if (!NBN.showFlaggedIssues) {
         $('#userAnnotationsDiv').hide('fast');
         return;
     }
@@ -387,7 +387,7 @@ function refreshUserAnnotations(){
                 //if the current user is the author of the annotation, they can delete
                 //new: the collection admin can also delete
                 console.log(OCC_REC);
-                if((OCC_REC.userId == userAssertion.userId) || OCC_REC.isCollectionAdmin){
+                if((OCC_REC.userId == userAssertion.userId) || NBN.isCollectionAdmin){
                     $clone.find('.deleteAnnotation').css({display:'block'});
                     $clone.find('.deleteAnnotation').attr('id', userAssertion.uuid);
                 } else {
