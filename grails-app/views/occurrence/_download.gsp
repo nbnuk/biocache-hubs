@@ -16,8 +16,8 @@
                 </div>
                 <div class="modal-body">
                     <p id="termsOfUseDownload">
-                        <g:message code="download.termsofusedownload.01" default="By downloading this content you are agreeing to use it in accordance with the NBN Atlas"/>
-                        <a href="https://docs.nbnatlas.org/nbn-atlas-terms-of-use/"><g:message code="download.termsofusedownload.02" default="Terms of Use"/></a>
+                        <g:message code="download.termsofusedownload.01" default="By downloading this content you are agreeing to use it in accordance with the Atlas of Living Australia"/>
+                        <a href="http://www.ala.org.au/about/terms-of-use/#TOUusingcontent"><g:message code="download.termsofusedownload.02" default="Terms of Use"/></a>
                         <g:message code="download.termsofusedownload.03" default="and any Data Provider Terms associated with the data download."/>
                         <br/><br/>
                         <g:message code="download.termsofusedownload.04" default="Please provide the following details before downloading (* required)"/>:
@@ -105,13 +105,13 @@
                     window.location.href = downloadUrl;
                     notifyDownloadStarted();
                 } else if (downloadType == "checklist") {
-                    var downloadUrl = generateDownloadPrefix($(":input#downloadChecklistUrl").val())+"&facets=" + "${(grailsApplication.config.downloads?.checklistFacet?:"species_guid")}" + "&lookup=true&file="+
+                    var downloadUrl = generateDownloadPrefix($("input#downloadChecklistUrl").val())+"&facets=species_guid&lookup=true&file="+
                             $("#filename").val()+"&sourceTypeId="+$("#sourceTypeId").val()+"&reasonTypeId="+$("#reasonTypeId").val();
                     //alert("downloadUrl = " + downloadUrl);
                     window.location.href = downloadUrl;
                     notifyDownloadStarted();
                 } else if (downloadType == "fieldGuide") {
-                    var downloadUrl = generateDownloadPrefix($(":input#downloadFieldGuideUrl").val())+"&facets=" + "${(grailsApplication.config.downloads?.checklistFacet?:"species_guid")}" +"&sourceTypeId="+
+                    var downloadUrl = generateDownloadPrefix($("input#downloadFieldGuideUrl").val())+"&facets=species_guid"+"&sourceTypeId="+
                             $("#sourceTypeId").val()+"&reasonTypeId="+$("#reasonTypeId").val();
                     window.open(downloadUrl);
                     notifyDownloadStarted();
