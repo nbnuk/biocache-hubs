@@ -38,7 +38,7 @@
             serverName: "${grailsApplication.config.serverName}${request.contextPath}",
             searchString: "${searchString}", //  JSTL var can contain double quotes // .encodeAsJavaScript()
             facetQueries: "${fqParams.encodeAsURL()}",
-            facetDownloadQuery: "${searchString}${fqParamsSingleQ}",
+            facetDownloadQuery: "${searchString}",
             maxFacets: "${grailsApplication.config.facets?.max ?: '4'}",
             queryString: "${queryDisplay.encodeAsJavaScript()}",
             bieWebappUrl: "${grailsApplication.config.bie.baseUrl}",
