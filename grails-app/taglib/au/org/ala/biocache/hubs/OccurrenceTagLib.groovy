@@ -139,7 +139,6 @@ class OccurrenceTagLib {
      */
     def currentFilterItem = { attrs ->
         def item = attrs.item
-        log.info("*** attrs = " + attrs.toString())
         def filterLabel = item.value.displayName.replaceFirst(/^\-/, "") // remove leading "-" for exclude searches
         def preFix = (item.value.displayName.startsWith('-')) ? "<span class='excludeFq'>[exclude]</span> " : ""
         def fqLabel = preFix + filterLabel
@@ -628,33 +627,10 @@ class OccurrenceTagLib {
                     } else if (occurrence.year) {
                         outputResultsLabel('year', alatag.message(code:"record.year.label"), occurrence.year, true)
                     }
-
-                    if (StringUtils.containsIgnoreCase( (occurrence?.miscStringProperties?.occurrence_status_s?:''), 'absent' )) {
-                        mkp.yieldUnescaped(" (absent) ")
-                    }
                     if (occurrence.stateProvince) {
-                        mkp.yieldUnescaped(occurrence.stateProvince)
-                        //outputResultsLabel('state', alatag.message(code:"record.state.label"), alatag.message(code:occurrence.stateProvince), true)
+                        outputResultsLabel('state', alatag.message(code:"record.state.label"), alatag.message(code:occurrence.stateProvince), true)
                     } else if (occurrence.country) {
                         outputResultsLabel('country', alatag.message(code:"record.country.label"), alatag.message(code:occurrence.country), true)
-                    }
-                }
-
-                span(class:'gridReference') {
-                    if (occurrence.gridReference) {
-                        outputResultsLabel("osgr", "OSGR", occurrence.gridReference, true)
-                    }
-                }
-
-                span(class:'openAssertions') {
-                    def user_assert = occurrence.hasUserAssertions?:"0"
-                    if (user_assert != "0") {
-                        log.info("user_assert for:" + occurrence.toString())
-                    }
-                    if ((grailsApplication.config.flagAnIssue?.show?: 'false').toBoolean()) {
-                        if (user_assert == "50005" || user_assert == "50001") { //only flag open or uncorrected issues
-                            mkp.yieldUnescaped("<i class='glyphicon glyphicon-flag' style='color:red;display:inline-block'></i>")
-                        }
                     }
                 }
 
@@ -740,7 +716,7 @@ class OccurrenceTagLib {
      * Display the logged in user (display name)
      */
     def loggedInUserDisplayname = { attrs ->
-        out << (authService?.displayName ?: authService?.email)
+        out << (authService?.displayName?:authService?.email)
     }
 
     /**
