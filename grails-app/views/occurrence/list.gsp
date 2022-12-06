@@ -917,6 +917,7 @@
                             </div>
                         </div><!-- end #imagesWrapper -->
                     </g:if>
+                    <g:render template="nbnOverviewAndDownload" />
                 </div><!-- end .css-panes -->
                 <form name="raw_taxon_search" class="rawTaxonSearch" id="rawTaxonSearchForm"
                       action="${request.contextPath}/occurrences/search/taxa" method="POST">

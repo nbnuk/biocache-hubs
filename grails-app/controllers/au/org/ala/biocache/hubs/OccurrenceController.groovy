@@ -443,7 +443,7 @@ class OccurrenceController {
                     isLastOccurrence = (indexInResults == (navigationDTO.getSearchRequestResultSize() - 1));
                 }
 
-                render(view: 'show', model:
+              //  render(view: 'show', model:
                         [
                                 record                  : record,
                                 uuid                    : id,
@@ -467,7 +467,7 @@ class OccurrenceController {
                                 environmentalSampleInfo : postProcessingService.getLayerSampleInfo(ENVIRO_LAYER, record, layersMetaData),
                                 contextualSampleInfo    : postProcessingService.getLayerSampleInfo(CONTEXT_LAYER, record, layersMetaData),
                                 skin                    : grailsApplication.config.skin.layout
-                        ])
+                        ]//)
             } else {
                 if (record?.message == 'Unrecognised UID') {
                     flash.message = "No record found with id: ${id}"

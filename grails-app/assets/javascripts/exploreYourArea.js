@@ -34,14 +34,20 @@ var geocoder, marker, circle, markerInfowindow, lastInfoWindow, taxon, taxonGuid
 var points = [], infoWindows = [], speciesGroup = "ALL_SPECIES";
 var coordinatePrecision = 4; // roughly 11m at equator || 5 = 1.1 m at equator
 var zoomForRadius = {
+    100: 16,/*NBN*/
+    500: 15,/*NBN*/
     1000: 14,
+    2000: 13,/*NBN*/
     5000: 12,
     10000: 11
 };
 var radiusForZoom = {
     11: 10,
     12: 5,
-    14: 1
+    13: 2,/*NBN*/
+    14: 1,
+    15: 0.5,/*NBN*/
+    16: 0.1/*NBN*/
 };
 
 /**
@@ -82,7 +88,7 @@ $(document).ready(function() {
     // Register onChange event on radius drop-down - will re-submit form
     $('select#radius').change(
         function(e) {
-            MAP_VAR.radius = parseInt($(this).val());
+            MAP_VAR.radius = parseFloat($(this).val()); /*NBN*/
             radius = MAP_VAR.radius * 1000;
             circle.setRadius(radius);
             MAP_VAR.zoom = zoomForRadius[radius];
@@ -157,7 +163,7 @@ $(document).ready(function() {
     $('#viewAllRecords').on("click", function(e) {
         e.preventDefault();
         //var params = "q=taxon_name:*|"+$('#latitude').val()+"|"+$('#longitude').val()+"|"+$('#radius').val();
-        var params = "q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=geospatial_kosher:true";
+        var params = "q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=(geospatial_kosher:true AND -occurrence_status:absent)";/*NBN*/
         if (speciesGroup != "ALL_SPECIES") {
             params += "&fq=species_group:" + speciesGroup;
         }
@@ -169,7 +175,7 @@ $(document).ready(function() {
     $('#downloadData').on("click", function(e) {
         e.preventDefault();
         //var params = "q=taxon_name:*|"+$('#latitude').val()+"|"+$('#longitude').val()+"|"+$('#radius').val();
-        var params = "?q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=geospatial_kosher:true";
+        var params = "?q=*:*&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&fq=(geospatial_kosher:true AND -occurrence_status:absent)";/*NBN*/
         if (speciesGroup != "ALL_SPECIES") {
             params += "&fq=species_group:" + speciesGroup;
         }
@@ -316,7 +322,7 @@ function loadLeafletMap() {
     );
 
     // Add a Circle overlay to the map.
-    radius = parseInt($('select#radius').val()) * 1010;
+    radius = Math.round(parseFloat($('select#radius').val()) * 1010);/*NBN*/
     var circlProps = {
         //radius: radius, leaflet 1+ uses this syntax
         stroke: true,
@@ -443,7 +449,7 @@ function loadRecordsLayer(retry) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: [ "geospatial_kosher:true",
+        fq: [ "geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
               speciesGroupParam
         ],
         qc: MAP_VAR.queryContext
@@ -539,7 +545,28 @@ function geocodeAddress(reverseGeocode) {
     var address = $('input#address').val();
     var latLng = null;
 
-    // Check if input contains a comma and try and parse coordinates
+    /*NBN START*/    //is it an OS Grid reference??
+    $.ajax({
+        dataType: "json",
+        url: EYA_CONF.biocacheServiceUrl + "/osgrid/lookup.json",
+        data: { q: address },
+        async:false,
+        success: function(data) {
+            if(data.valid){
+                if (data.decimalLatitude && data.decimalLongitude) {
+                    latLng = new google.maps.LatLng(data.decimalLatitude, data.decimalLongitude);
+                    updateMarkerAddress("GPS coordinates: " + data.decimalLatitude + ", " + data.decimalLongitude);
+                    updateMarkerPosition(latLng);
+                    // reload map pin, etc
+                    initialize();
+                    loadRecordsLayer();
+                }
+            }
+        }
+    });
+    /*NBN END*/
+
+    // Check if input contains a comma and try and patch coordinates
     if (address && address.indexOf(",") > -1 && magellan) {
         var parts = address.split(",");
         var lat = magellan(parts[0].trim()).latitude(); //.toDD();
@@ -631,7 +658,7 @@ function groupClicked(el) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true",
+        fq: "geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
         qc: MAP_VAR.queryContext,
         sort: sortField,
         pageSize: 50
@@ -685,7 +712,7 @@ function processSpeciesJsonData(data, appendResults) {
                         ' species profile</a> | ';
                 }
                 speciesInfo = speciesInfo + '<a href="' + MAP_VAR.contextPath + '/occurrences/search?q=taxon_name:%22' + data[i].name +
-                    '%22&lat=' + $('input#latitude').val() + '&lon=' + $('input#longitude').val() + '&radius=' + $('select#radius').val() + '" title="' +
+                    '%22&lat=' + $('input#latitude').val() + '&lon=' + $('input#longitude').val() + '&radius=' + $('select#radius').val() + '&fq=-occurrence_status:absent" title="' + /*NBN*/
                     recsTitle + '"><img src="' + MAP_VAR.imagesUrlPrefix + '/database_go.png" ' +
                     'alt="search list icon" style="margin-bottom:-3px;" class="no-rounding"/> list of records</a></div>';
                 tr = tr + speciesInfo;
@@ -772,7 +799,7 @@ function processSpeciesJsonData(data, appendResults) {
                 lat: $('#latitude').val(),
                 lon: $('#longitude').val(),
                 radius: $('#radius').val(),
-                fq: "geospatial_kosher:true",
+                fq: "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
                 start: start,
                 common: commonName,
                 sort: sortParam,
@@ -810,7 +837,7 @@ function loadGroups() {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true",
+        fq: "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
         facets: "species_group",
         qc: MAP_VAR.queryContext
     }
@@ -844,7 +871,7 @@ function populateSpeciesGroups(data) {
         var label = group;
         if (group == "ALL_SPECIES") label = "all.species";
         var rc = (group == speciesGroup) ? " class='activeRow'" : ""; // highlight active group
-        var i18nLabel = jQuery.i18n.prop(label);
+        var i18nLabel = jQuery.i18n.prop(label).replace(/\s/g, '');/*NBN*/
         // console.log("i18n check", label, i18nLabel);
         var h = "<tr"+rc+" title='click to view group on map'><td class='indent"+indent+"'><a href='#' id='"+group+"' class='taxonBrowse' title='click to view group on map'>"+i18nLabel+"</a></td><td>"+count+"</td></tr>";
         $("#taxa-level-0 tbody").append(h);
