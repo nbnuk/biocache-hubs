@@ -548,7 +548,7 @@ function geocodeAddress(reverseGeocode) {
     /*NBN START*/    //is it an OS Grid reference??
     $.ajax({
         dataType: "json",
-        url: EYA_CONF.biocacheServiceUrl + "/osgrid/lookup.json",
+        url: MAP_VAR.biocacheServiceUrl + "/osgrid/lookup.json",
         data: { q: address },
         async:false,
         success: function(data) {
