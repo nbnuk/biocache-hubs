@@ -449,7 +449,7 @@ function loadRecordsLayer(retry) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: [ "geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
+        fq: [ "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
               speciesGroupParam
         ],
         qc: MAP_VAR.queryContext
@@ -658,7 +658,7 @@ function groupClicked(el) {
         lat: $('#latitude').val(),
         lon: $('#longitude').val(),
         radius: $('#radius').val(),
-        fq: "geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
+        fq: "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
         qc: MAP_VAR.queryContext,
         sort: sortField,
         pageSize: 50
