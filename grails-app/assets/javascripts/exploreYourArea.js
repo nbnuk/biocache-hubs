@@ -554,7 +554,7 @@ function geocodeAddress(reverseGeocode) {
         success: function(data) {
             if(data.valid){
                 if (data.decimalLatitude && data.decimalLongitude) {
-                    latLng = new google.maps.LatLng(data.decimalLatitude, data.decimalLongitude);
+                    latLng = L.latLng(data.decimalLatitude, data.decimalLongitude);
                     updateMarkerAddress("GPS coordinates: " + data.decimalLatitude + ", " + data.decimalLongitude);
                     updateMarkerPosition(latLng);
                     // reload map pin, etc
