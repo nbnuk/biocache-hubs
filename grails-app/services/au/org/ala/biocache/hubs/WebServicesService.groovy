@@ -225,7 +225,7 @@ class WebServicesService {
                 apiKey             : grailsApplication.config.biocache.apiKey
         ]
 
-        postFormData(grailsApplication.config.biocache.baseUrl + "/occurrences/assertions/add", postBody)
+        postFormData(grailsApplication.config.biocache.baseUrl + "/occurrences/assertions/add", postBody, grailsApplication.config.biocache.apiKey as String)
     }
 
     /**
@@ -242,7 +242,7 @@ class WebServicesService {
                 apiKey       : grailsApplication.config.biocache.apiKey
         ]
 
-        postFormData(grailsApplication.config.biocache.baseUrl + "/occurrences/assertions/delete", postBody)
+        postFormData(grailsApplication.config.biocache.baseUrl + "/occurrences/assertions/delete", postBody, grailsApplication.config.biocache.apiKey as String)
     }
 
     @Cacheable('collectoryCache')
