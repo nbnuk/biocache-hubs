@@ -484,6 +484,8 @@ class WebServicesService {
         def conn = new URL(url).openConnection()
 
         try {
+            // patch till upgrade
+            conn.setRequestProperty("Accept", "text/plain")  // Set the Accept header
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
             def text = conn.content.text
