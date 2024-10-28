@@ -119,11 +119,6 @@ class WebServicesService {
         return getJsonElements(url, "${grailsApplication.config.alerts.apiKey}")
     }
 
-    def getSaveSearches(String userId) {
-        def url = "${grailsApplication.config.alerts.baseUrl}" + "/api/savedSearch/list/" + userId
-        return getJsonElements(url, "${grailsApplication.config.alerts.apiKey}")
-    }
-
     def subscribeMyAnnotation(String userId) {
         String url = "${grailsApplication.config.alerts.baseUrl}" + "/api/alerts/user/" + userId + "/subscribeMyAnnotation"
         postFormData(url, [:], grailsApplication.config.alerts.apiKey as String)
