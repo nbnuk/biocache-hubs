@@ -991,5 +991,6 @@
                        default="total processing time"/> = ${(endPageTime - startPageTime) + processingTime} ms
         </div>
     </g:if>
+    <g:render template="saveSearchModals" />
 </body>
 </html>
