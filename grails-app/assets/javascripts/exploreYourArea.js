@@ -371,26 +371,43 @@ function loadLeafletMap() {
     updateMarkerPosition(latLng);
 }
 
+var geocodeCache = {};
+
+function processGeocodeResponse(response) {
+    if (response) {
+        var address = response.formatted_address;
+        updateMarkerAddress(address);
+
+        // Update the info window for marker icon
+        var content = '<div class="infoWindow"><b>Location:</b><br/>' + address + '</div>';
+        markerInfowindow.bindPopup(content);
+    }
+}
+
 /**
  * Google geocode function
  */
 function geocodePosition(pos) {
+    var cacheKey = pos.lat + ',' + pos.lng;
+
+    if (geocodeCache.hasOwnProperty(cacheKey)) {
+        //console.log("Cache hit for", cacheKey);
+        processGeocodeResponse(geocodeCache[cacheKey]);
+    } else {
+
     var gLatLng = new google.maps.LatLng(pos.lat, pos.lng); // convert leaflet Latlng to Google Latlng
 
-    geocoder.geocode({
-        latLng: gLatLng
-    }, function(responses) {
-        if (responses && responses.length > 0) {
-            // console.log("geocoded position", responses[0]);
-            var address = responses[0].formatted_address;
-            updateMarkerAddress(address);
-            // update the info window for marker icon
-            var content = '<div class="infoWindow"><b>Location:</b><br/>'+address+'</div>';
-            markerInfowindow.bindPopup(content);
-        } else {
-            updateMarkerAddress('Cannot determine address at this location.');
-        }
-    });
+        geocoder.geocode({
+            latLng: gLatLng
+        }, function(responses) {
+            if (responses && responses.length > 0) {
+                geocodeCache[cacheKey] = responses[0];
+                processGeocodeResponse(responses[0]);
+            } else {
+                updateMarkerAddress('Cannot determine address at this location.');
+            }
+        });
+    }
 }
 
 /**
@@ -538,6 +555,21 @@ function attemptGeolocation() {
     }
 }
 
+var geocodeAddressCache = {};
+
+function processGeocodeAddressResponse(result) {
+    //console.log('geocodeAddress results', results);
+    updateMarkerAddress(result.formatted_address);
+    var gLatLng = result.geometry.location;
+    // console.log("gLatLng", gLatLng.lat(), gLatLng.lng());
+    var latLng = L.latLng(gLatLng.lat(), gLatLng.lng());
+    updateMarkerPosition(latLng);
+    // reload map pin, etc
+    initialize();
+    loadRecordsLayer();
+    //LoadTaxaGroupCounts();
+}
+
 /**
  * Reverse geocode coordinates via Google Maps API
  */
@@ -586,25 +618,22 @@ function geocodeAddress(reverseGeocode) {
     }
 
     if (!latLng && geocoder && address) {
-        //geocoder.getLocations(address, addAddressToPage);
-        // console.log("geocodeAddress with address string");
-        geocoder.geocode( {'address': address, region: MAP_VAR.geocodeRegion}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                // geocode was successful
-                //console.log('geocodeAddress results', results);
-                updateMarkerAddress(results[0].formatted_address);
-                var gLatLng = results[0].geometry.location;
-                // console.log("gLatLng", gLatLng.lat(), gLatLng.lng());
-                var latLng = L.latLng(gLatLng.lat(), gLatLng.lng());
-                updateMarkerPosition(latLng);
-                // reload map pin, etc
-                initialize();
-                loadRecordsLayer();
-                //LoadTaxaGroupCounts();
-            } else {
-                alert("Geocode was not successful for the following reason: " + status);
-            }
-        });
+        if(geocodeAddressCache.hasOwnProperty(address)) {
+            //console.log("Cache hit for", address);
+            processGeocodeAddressResponse(geocodeAddressCache[address]);
+        } else {
+            //geocoder.getLocations(address, addAddressToPage);
+            // console.log("geocodeAddress with address string");
+            geocoder.geocode( {'address': address, region: MAP_VAR.geocodeRegion}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    // geocode was successful
+                    geocodeAddressCache[address] = results[0];
+                    processGeocodeAddressResponse(results[0]);
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        }
     } else {
         initialize();
     }
