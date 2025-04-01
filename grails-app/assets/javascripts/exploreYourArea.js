@@ -372,6 +372,7 @@ function loadLeafletMap() {
 }
 
 var geocodeCache = {};
+var currentPendingGeocodeRequest = null; // Stores ongoing API calls
 
 function processGeocodeResponse(response) {
     if (response) {
@@ -393,21 +394,34 @@ function geocodePosition(pos) {
     if (geocodeCache.hasOwnProperty(cacheKey)) {
         //console.log("Cache hit for", cacheKey);
         processGeocodeResponse(geocodeCache[cacheKey]);
-    } else {
+        return;
+    }
+
+    // The way history is handled can cause concurrent calls
+    if (currentPendingGeocodeRequest === cacheKey) {
+        // A duplicate request is already in progress, don't make another API call
+        return;
+    }
+
+    currentPendingGeocodeRequest = cacheKey;
 
     var gLatLng = new google.maps.LatLng(pos.lat, pos.lng); // convert leaflet Latlng to Google Latlng
 
-        geocoder.geocode({
-            latLng: gLatLng
-        }, function(responses) {
-            if (responses && responses.length > 0) {
-                geocodeCache[cacheKey] = responses[0];
-                processGeocodeResponse(responses[0]);
-            } else {
-                updateMarkerAddress('Cannot determine address at this location.');
-            }
-        });
-    }
+    geocoder.geocode({
+        latLng: gLatLng
+    }, function(responses) {
+
+        if (currentPendingGeocodeRequest === cacheKey) {
+            currentPendingGeocodeRequest = null;
+        }
+
+        if (responses && responses.length > 0) {
+            geocodeCache[cacheKey] = responses[0];
+            processGeocodeResponse(responses[0]);
+        } else {
+            updateMarkerAddress('Cannot determine address at this location.');
+        }
+    });
 }
 
 /**
