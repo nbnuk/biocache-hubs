@@ -449,7 +449,10 @@ function loadRecordsLayer(retry) {
     }
 
     // Update URL hash for back button, etc
-    location.hash = $('#latitude').val() + "|" + $('#longitude').val() + "|" + MAP_VAR.zoom + "|" + speciesGroup;
+    var newHash = "#" + $('#latitude').val() + "|" + $('#longitude').val() + "|" + MAP_VAR.zoom + "|" + speciesGroup;
+    if (location.hash !== newHash) {
+        history.pushState(null, null, newHash);
+    }
 
     // remove any existing records layers and controls
     if (alaWmsLayer) {
