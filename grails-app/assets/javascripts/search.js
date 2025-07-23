@@ -161,6 +161,9 @@ $(document).ready(function() {
 
     $("#updateFacetOptions").click(function(e) {
         e.preventDefault();
+        $(this).prop('disabled', true);
+        $(this).html('Updating ...');
+
         // alert("about to reload with new facets...");
         var selectedFacets = [];
         // iterate over seleted facet options
