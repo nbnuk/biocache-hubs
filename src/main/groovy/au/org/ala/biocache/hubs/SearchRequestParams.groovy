@@ -54,6 +54,10 @@ class SearchRequestParams implements Validateable{
     /** Default filters to disable (currently can only disable on category, so it's a list of disabled category name)*/
     List<String> disableQualityFilter = []
 
+    public void setPageSize(int pageSize){
+        this.pageSize = pageSize > 1000 ? 1000 : pageSize;
+    }
+
     /**
      * Custom toString method to produce a String to be used as the request parameters
      * for the Biocache Service webservices
