@@ -991,8 +991,8 @@
                        default="total processing time"/> = ${(endPageTime - startPageTime) + processingTime} ms
         </div>
     </g:if>
-    <g:if test="${grailsApplication.config.feature.savedsearches?.enabled?.toString()?.toBoolean()}">
+
         <g:render template="saveSearchModals" />
-    </g:if>
+
 </body>
 </html>
