@@ -1934,8 +1934,7 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
         jsonUri += "&fsort=" + fsort;
     }
     //jsonUri += "&callback=?"; // JSONP trigger
-
-    $.getJSON(jsonUri, function(data) {
+    var req = $.getJSON(jsonUri, function(data) {
         //console.log("data",data);
         if (data.totalRecords && data.totalRecords > 0) {
             var hasMoreFacets = false;
@@ -1947,7 +1946,7 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
                 $("table#fullFacets tr").not("tr.tableHead").not("#spinnerRow").remove();
             }
             $.each(data.facetResults[0].fieldResult, function(i, el) {
-                console.log("0. facet", el);
+                //console.log("0. facet", el);
                 if (el.count > 0 && i != facetLimit - 1) {
 
                     // surround with quotes: fq value if contains spaces but not for range queries
@@ -2032,6 +2031,18 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
             $("tr#loadMore").remove(); // remove the load more records link
             $('#spinnerRow').hide();
             $("table#fullFacets tbody").append("<tr><td></td><td>[Error: no values returned]</td></tr>");
+        }
+    });
+
+    req.fail(function (jqXHR, textStatus, errorThrown) {
+        $("tr#loadingRow").remove(); // remove the loading message
+        $("tr#loadMore").remove(); // remove the load more records link
+        $('#spinnerRow').hide();
+
+        if (jqXHR.status === 401) {
+            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Please login again</td></tr>");
+        } else {
+            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - something went wrong. Try logging in again.</td></tr>");
         }
     });
 }
