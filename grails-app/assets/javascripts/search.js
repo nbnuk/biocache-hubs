@@ -2041,8 +2041,10 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
 
         if (jqXHR.status === 401) {
             $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Please login again</td></tr>");
+        } else if (jqXHR.status === 302) {
+            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - session may have timed out. Try refreshing the page.</td></tr>");
         } else {
-            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - something went wrong. Try logging in again.</td></tr>");
+            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - something went wrong. Try refreshing the page.</td></tr>");
         }
     });
 }
