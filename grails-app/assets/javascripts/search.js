@@ -2039,12 +2039,14 @@ function loadFacetsContent(facetName, fsort, foffset, facetLimit, replaceFacets)
         $("tr#loadMore").remove(); // remove the load more records link
         $('#spinnerRow').hide();
 
+        var errorMessage;
         if (jqXHR.status === 401) {
-            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Please login again</td></tr>");
+            errorMessage=jQuery.i18n.prop("facets.401");
         } else if (jqXHR.status === 302) {
-            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - session may have timed out. Try refreshing the page.</td></tr>");
+            errorMessage=jQuery.i18n.prop("facets.302");
         } else {
-            $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:2px;'>Oooops - something went wrong. Try refreshing the page.</td></tr>");
+            errorMessage=jQuery.i18n.prop("facets.generic_error");
         }
+        $("table#fullFacets tbody").append("<tr><td colspan='3' style='text-align:center;padding:6px 2px;'>"+errorMessage+"</td></tr>");
     });
 }
