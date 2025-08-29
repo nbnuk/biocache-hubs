@@ -18,6 +18,7 @@ import org.apache.commons.httpclient.util.URIUtil
 @AutoClone
 @EqualsAndHashCode
 class SearchRequestParams implements Validateable{
+    static final Integer MAX_PAGE_SIZE = Holders.config.maxPageSize?Integer.parseInt(Holders.config.maxPageSize):1000;
     Long qId // "qid:12312321"
     String formattedQuery
     String q = ""
@@ -55,7 +56,7 @@ class SearchRequestParams implements Validateable{
     List<String> disableQualityFilter = []
 
     public void setPageSize(int pageSize){
-        this.pageSize = pageSize > 1000 ? 1000 : pageSize;
+        this.pageSize = pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
     }
 
     /**
