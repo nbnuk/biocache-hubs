@@ -51,7 +51,7 @@
             defaultListView: "${grailsApplication.config.defaultListView}",
             resourceName: "${grailsApplication.config.skin.orgNameLong}",
             facetLimit: "${grailsApplication.config.facets.limit ?: 50}",
-            queryContext: "${grailsApplication.config.biocache.queryContext}",
+            queryContext: "${raw(grailsApplication.config.biocache.queryContext.encodeAsJavaScript())}",
             selectedDataResource: "${selectedDataResource}",
             autocompleteHints: ${grailsApplication.config.bie?.autocompleteHints?.encodeAsJson() ?: '{}'},
             zoomOutsideScopedRegion: Boolean("${grailsApplication.config.map.zoomOutsideScopedRegion}"),

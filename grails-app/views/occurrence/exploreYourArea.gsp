@@ -53,7 +53,7 @@
             zoom: Number(${zoom}),
             radius: Number(${radius}),
             speciesPageUrl: "${speciesPageUrl}",
-            queryContext: "${queryContext}",
+            queryContext: "${raw(queryContext.encodeAsJavaScript())}",
             mapMinimalUrl: "${grailsApplication.config.map.minimal.url}",
             mapMinimalAttribution: "${raw(grailsApplication.config.map.minimal.attr)}",
             mapMinimalSubdomains: "${grailsApplication.config.map.minimal.subdomains}",

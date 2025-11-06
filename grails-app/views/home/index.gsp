@@ -38,7 +38,7 @@
             autocompleteHints: ${grailsApplication.config.bie?.autocompleteHints?.encodeAsJson() ?: '{}'},
             contextPath: "${request.contextPath}",
             locale: "${org.springframework.web.servlet.support.RequestContextUtils.getLocale(request)}",
-            queryContext: "${grailsApplication.config.biocache.queryContext}",
+            queryContext: "${raw(grailsApplication.config.biocache.queryContext.encodeAsJavaScript())}",
             autocompleteUrl: "${grailsApplication.config.skin.useAlaBie?.toBoolean() ? (grailsApplication.config.bieService.baseUrl + '/search/auto.json') : biocacheServiceUrl + '/autocomplete/search'}",
             autocompleteUseBie: ${grailsApplication.config.skin.useAlaBie?.toBoolean()}
         }
