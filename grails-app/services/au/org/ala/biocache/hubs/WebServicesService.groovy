@@ -68,9 +68,9 @@ class WebServicesService {
     }
 
     def JSONObject getRecord(String id, Boolean hasClubView) {
-        def url = "${grailsApplication.config.biocache.baseUrl}/occurrence/${id.encodeAsURL()}"
+        def url = "${grailsApplication.config.biocache.baseUrl}/occurrence/${id.encodeAsURL()}?im=true"
         if (hasClubView) {
-            url += "?apiKey=${grailsApplication.config.biocache.apiKey ?: ''}"
+            url += "&apiKey=${grailsApplication.config.biocache.apiKey ?: ''}"
         }
         getJsonElements(url)
     }
