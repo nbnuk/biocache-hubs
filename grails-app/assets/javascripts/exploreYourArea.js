@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2014 Atlas of Living Australia
  * All Rights Reserved.
@@ -30,6 +29,7 @@
  */
 
 
+var taxa = [];
 var geocoder, marker, circle, markerInfowindow, lastInfoWindow, taxon, taxonGuid, alaWmsLayer, radius;
 var points = [], infoWindows = [], speciesGroup = "ALL_SPECIES";
 var coordinatePrecision = 4; // roughly 11m at equator || 5 = 1.1 m at equator
@@ -51,12 +51,119 @@ var radiusForZoom = {
 };
 
 /**
+ * Bind species-row click + sort/load-more click ONLY ONCE using delegated handlers.
+ * This avoids exponential event-handler rebinding (2,4,8,16... network calls).
+ */
+var sortingHandlersBound = false;
+
+function bindSortingHandlersOnce() {
+    if (sortingHandlersBound) return;
+    sortingHandlersBound = true;
+
+    // Row click: delegated so it works after tbody is rebuilt
+    $('#rightList tbody')
+        .off('click.specieslink', 'tr')
+        .on('click.specieslink', 'tr', function (e) {
+            // ignore special rows
+            if (this.id === 'loadMoreSpecies' || this.id === 'info') return;
+
+            // If user clicked a real link inside the row, let it behave normally
+            if ($(e.target).closest('a.speciesPageLink, a[href*="occurrences/search"]').length) return;
+
+
+            e.preventDefault();
+
+            var $row = $(this);
+            var $taxonLink = $row.find('a.taxonBrowse2');
+            if ($taxonLink.length === 0) return;
+
+            var href = $taxonLink.attr('href') || '';
+            var thisTaxonA = href.split('/');
+            var thisTaxon = thisTaxonA[thisTaxonA.length - 1].replace(/%20/g, ' ');
+            var guid = $taxonLink.attr('id');
+
+            taxonGuid = guid;
+            taxon = thisTaxon;
+
+            $('#rightList tbody tr').removeClass("activeRow2");
+            $('#rightList tbody tr#info').detach();
+
+            var info = $row.find('.speciesInfo').html();
+            if (info) {
+                $row.after('<tr id="info"><td><td>' + info + '<td></td></tr>');
+            }
+
+            $row.addClass("activeRow2");
+            loadRecordsLayer();
+        });
+
+    // Hover effect: delegated
+    $('#rightList tbody')
+        .off('mouseenter.hoverCell mouseleave.hoverCell', 'tr')
+        .on('mouseenter.hoverCell', 'tr', function () { $(this).addClass('hoverCell'); })
+        .on('mouseleave.hoverCell', 'tr', function () { $(this).removeClass('hoverCell'); });
+
+    // Sort headers + load more link: delegated (covers elements added/removed dynamically)
+    $(document)
+        .off('click.sort', '#loadMoreSpecies a, thead.fixedHeader a')
+        .on('click.sort', '#loadMoreSpecies a, thead.fixedHeader a', function (e) {
+            e.preventDefault();
+
+            var thisTaxon = $('#taxa-level-0 tr.activeRow').find('a.taxonBrowse').attr('id');
+            taxa = []; // array of taxa
+            taxa = (thisTaxon && thisTaxon.indexOf("|") > 0) ? thisTaxon.split("|") : thisTaxon;
+
+            var start = parseInt($(this).attr('href'), 10) || 0;
+            var sortOrder = $(this).data("sort") ? $(this).data("sort") : "count";
+            var sortParam = sortOrder;
+
+            var commonName = false;
+            if (sortOrder === "common") {
+                commonName = true;
+                sortParam = "index";
+            } else if (sortOrder === "taxa") {
+                sortParam = "index";
+            }
+
+            var append = true;
+            if (start === 0) {
+                append = false;
+                $(".scrollContent").scrollTop(0); // return scroll bar to top of tbody
+            }
+
+            $("div#rightList").data("sort", sortOrder); // save it to the DOM
+
+            // AJAX...
+            // NBN Patch from https://github.com/AtlasOfLivingAustralia/biocache-hubs/commit/b88d701f2506d16007947eff9a6d41726a468aa8
+            var uri = MAP_VAR.biocacheServiceUrl + "/explore/group/" + speciesGroup;
+            var params = {
+                lat: $('#latitude').val(),
+                lon: $('#longitude').val(),
+                radius: $('#radius').val(),
+                fq: "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
+                start: start,
+                common: commonName,
+                sort: sortParam,
+                pageSize: 50,
+                qc: MAP_VAR.queryContext
+            };
+
+            $('#loadMoreSpecies').remove();
+            $.getJSON(uri, params, function (data) {
+                processSpeciesJsonData(data, append);
+            });
+        });
+}
+
+/**
  * Document onLoad event using JQuery
  */
 $(document).ready(function() {
 
     // initialise Google Geocoder
     geocoder = new google.maps.Geocoder();
+
+    bindSortingHandlersOnce();
 
     // Catch page events...
 
@@ -772,96 +879,6 @@ function processSpeciesJsonData(data, appendResults) {
         var text = '<tr><td></td><td colspan="2">[no species found]</td></tr>';
         $('#rightList tbody').append(text);
     }
-
-    // Register clicks for the list of species links so that map changes
-    $('#rightList tbody tr').unbind('click.specieslink')
-    $('#rightList tbody tr').bind('click.specieslink', function(e) {
-        e.preventDefault(); // ignore the href text - used for data
-        //var thisTaxon = $(this).find('a.taxonBrowse2').attr('href'); // absolute URI in IE!
-        var thisTaxonA = $(this).find('a.taxonBrowse2').attr('href').split('/');
-        var thisTaxon = thisTaxonA[thisTaxonA.length-1].replace(/%20/g, ' ');
-        var guid = $(this).find('a.taxonBrowse2').attr('id');
-        taxonGuid = guid;
-        taxon = thisTaxon; // global var so map can show just this taxon
-        //rank = $(this).find('a.taxonBrowse2').attr('id');
-        //taxa = []; // array of taxa
-        //taxa = (taxon.indexOf("|") > 0) ? taxon.split("|") : taxon;
-        //$(this).unbind('click'); // activate links inside this row
-        $('#rightList tbody tr').removeClass("activeRow2"); // un-highlight previous current taxon
-        // remove previous species info row
-        $('#rightList tbody tr#info').detach();
-        var info = $(this).find('.speciesInfo').html();
-        // copy contents of species into a new (tmp) row
-        if (info) {
-            $(this).after('<tr id="info"><td><td>'+info+'<td></td></tr>');
-        }
-        // hide previous selected spceies info box
-        $(this).addClass("activeRow2"); // highloght current taxon
-        // show the links for current selected species
-        //console.log('species link -> loadRecordsLayer()');
-        loadRecordsLayer();
-    });
-
-    // Register onClick for "load more species" link & sort headers
-    $('#loadMoreSpecies a, thead.fixedHeader a').unbind('click.sort')
-    $('#loadMoreSpecies a, thead.fixedHeader a').bind('click.sort', function(e) {
-            e.preventDefault(); // ignore the href text - used for data
-            var thisTaxon = $('#taxa-level-0 tr.activeRow').find('a.taxonBrowse').attr('id');
-            //rank = $('#taxa-level-0 tr.activeRow').find('a.taxonBrowse').attr('id');
-            taxa = []; // array of taxa
-            taxa = (thisTaxon.indexOf("|") > 0) ? thisTaxon.split("|") : thisTaxon;
-            var start = $(this).attr('href');
-            var sortOrder = $(this).data("sort") ? $(this).data("sort") : "count";
-            var sortParam = sortOrder;
-            var commonName = false;
-            if (sortOrder == "common") {
-                commonName = true;
-                sortParam = "index";
-                //$("a#commonSort").insertBefore("a#speciesSort");
-            } else if (sortOrder == "taxa") {
-                //$("a#speciesSort").insertBefore("a#commonSort");
-                sortParam = "index";
-            }
-            var append = true;
-            if (start == 0) {
-                append = false;
-                $(".scrollContent").scrollTop(0); // return scroll bar to top of tbody
-            }
-            $("div#rightList").data("sort", sortOrder); // save it to the DOM
-            // AJAX...
-            // NBN Patch from https://github.com/AtlasOfLivingAustralia/biocache-hubs/commit/b88d701f2506d16007947eff9a6d41726a468aa8
-            var uri = MAP_VAR.biocacheServiceUrl + "/explore/group/"+speciesGroup;
-            //var params = "&lat="+$('#latitude').val()+"&lon="+$('#longitude').val()+"&radius="+$('#radius').val()+"&group="+speciesGroup;
-            var params = {
-                lat: $('#latitude').val(),
-                lon: $('#longitude').val(),
-                radius: $('#radius').val(),
-                fq: "(geospatial_kosher:true AND -occurrence_status:absent)",/*NBN*/
-                start: start,
-                common: commonName,
-                sort: sortParam,
-                pageSize: 50,
-                qc: MAP_VAR.queryContext
-            };
-            //console.log("explore params", params, append);
-            //$('#taxaDiv').html('[loading...]');
-            $('#loadMoreSpecies').remove();
-            $.getJSON(uri, params, function(data) {
-                // process JSON data from request
-                processSpeciesJsonData(data, append);
-            });
-        }
-    );
-
-    // add hover effect to table cell with scientific names
-    $('#rightList tbody tr').hover(
-        function() {
-            $(this).addClass('hoverCell');
-        },
-        function() {
-            $(this).removeClass('hoverCell');
-        }
-    );
 }
 
 /*
