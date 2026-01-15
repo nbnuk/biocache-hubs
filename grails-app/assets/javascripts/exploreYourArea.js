@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2014 Atlas of Living Australia
  * All Rights Reserved.
@@ -30,6 +29,7 @@
  */
 
 
+var taxa = [];
 var geocoder, marker, circle, markerInfowindow, lastInfoWindow, taxon, taxonGuid, alaWmsLayer, radius;
 var points = [], infoWindows = [], speciesGroup = "ALL_SPECIES";
 var coordinatePrecision = 4; // roughly 11m at equator || 5 = 1.1 m at equator
@@ -49,6 +49,12 @@ var radiusForZoom = {
     15: 0.5,/*NBN*/
     16: 0.1/*NBN*/
 };
+
+/**
+ * Bind species-row click + sort/load-more click ONLY ONCE using delegated handlers.
+ * This avoids exponential event-handler rebinding (2,4,8,16... network calls).
+ */
+var sortingHandlersBound = false;
 
 /**
  * Document onLoad event using JQuery
@@ -774,9 +780,18 @@ function processSpeciesJsonData(data, appendResults) {
     }
 
     // Register clicks for the list of species links so that map changes
-    $('#rightList tbody tr').unbind('click.specieslink')
-    $('#rightList tbody tr').bind('click.specieslink', function(e) {
-        e.preventDefault(); // ignore the href text - used for data
+    if (!sortingHandlersBound) {
+        sortingHandlersBound = true;
+        // Row click: delegated so it works after tbody is rebuilt
+    $('#rightList tbody')
+        .off('click.specieslink', 'tr')
+        .on('click.specieslink', 'tr', function (e) {
+        // ignore special rows
+        if (this.id === 'loadMoreSpecies' || this.id === 'info') return;
+
+        // If user clicked a real link inside the row, let it behave normally
+        if ($(e.target).closest('a.speciesPageLink, a[href*="occurrences/search"]').length) return;
+        e.preventDefault();
         //var thisTaxon = $(this).find('a.taxonBrowse2').attr('href'); // absolute URI in IE!
         var thisTaxonA = $(this).find('a.taxonBrowse2').attr('href').split('/');
         var thisTaxon = thisTaxonA[thisTaxonA.length-1].replace(/%20/g, ' ');
@@ -803,8 +818,9 @@ function processSpeciesJsonData(data, appendResults) {
     });
 
     // Register onClick for "load more species" link & sort headers
-    $('#loadMoreSpecies a, thead.fixedHeader a').unbind('click.sort')
-    $('#loadMoreSpecies a, thead.fixedHeader a').bind('click.sort', function(e) {
+    $(document)
+        .off('click.sort', '#loadMoreSpecies a, thead.fixedHeader a')
+        .on('click.sort', '#loadMoreSpecies a, thead.fixedHeader a', function (e) {
             e.preventDefault(); // ignore the href text - used for data
             var thisTaxon = $('#taxa-level-0 tr.activeRow').find('a.taxonBrowse').attr('id');
             //rank = $('#taxa-level-0 tr.activeRow').find('a.taxonBrowse').attr('id');
@@ -854,14 +870,16 @@ function processSpeciesJsonData(data, appendResults) {
     );
 
     // add hover effect to table cell with scientific names
-    $('#rightList tbody tr').hover(
-        function() {
+    $('#rightList tbody')
+        .off('mouseenter.hoverCell mouseleave.hoverCell', 'tr')
+        .on('mouseenter.hoverCell', 'tr', function () {
             $(this).addClass('hoverCell');
-        },
-        function() {
+        })
+        .on('mouseleave.hoverCell', 'tr', function () {
             $(this).removeClass('hoverCell');
         }
     );
+    }
 }
 
 /*
