@@ -792,11 +792,6 @@ function processSpeciesJsonData(data, appendResults) {
         // If user clicked a real link inside the row, let it behave normally
         if ($(e.target).closest('a.speciesPageLink, a[href*="occurrences/search"]').length) return;
         e.preventDefault();
-
-        var $row = $(this);
-        var $taxonLink = $row.find('a.taxonBrowse2');
-        if ($taxonLink.length === 0) return;
-        var href = $taxonLink.attr('href') || '';
         //var thisTaxon = $(this).find('a.taxonBrowse2').attr('href'); // absolute URI in IE!
         var thisTaxonA = $(this).find('a.taxonBrowse2').attr('href').split('/');
         var thisTaxon = thisTaxonA[thisTaxonA.length-1].replace(/%20/g, ' ');
