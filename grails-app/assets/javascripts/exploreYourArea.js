@@ -873,12 +873,13 @@ function processSpeciesJsonData(data, appendResults) {
     $('#rightList tbody')
         .off('mouseenter.hoverCell mouseleave.hoverCell', 'tr')
         .on('mouseenter.hoverCell', 'tr', function () {
+            if (this.id === 'loadMoreSpecies' || this.id === 'info') return;
             $(this).addClass('hoverCell');
         })
         .on('mouseleave.hoverCell', 'tr', function () {
+            if (this.id === 'loadMoreSpecies' || this.id === 'info') return;
             $(this).removeClass('hoverCell');
-        }
-    );
+        });
     }
 }
 
