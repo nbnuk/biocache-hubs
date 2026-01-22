@@ -875,7 +875,8 @@ function processSpeciesJsonData(data, appendResults) {
         })
         .on('mouseleave.hoverCell', 'tr:not(#loadMoreSpecies):not(#info)', function () {
             $(this).removeClass('hoverCell');
-        });
+        }
+    );
     }
 }
 
