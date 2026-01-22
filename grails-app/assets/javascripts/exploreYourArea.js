@@ -785,9 +785,7 @@ function processSpeciesJsonData(data, appendResults) {
         // Row click: delegated so it works after tbody is rebuilt
     $('#rightList tbody')
         .off('click.specieslink', 'tr')
-        .on('click.specieslink', 'tr', function (e) {
-        // ignore special rows
-        if (this.id === 'loadMoreSpecies' || this.id === 'info') return;
+        .on('click.specieslink', 'tr:not(#loadMoreSpecies):not(#info)', function (e) {
 
         // If user clicked a real link inside the row, let it behave normally
         if ($(e.target).closest('a.speciesPageLink, a[href*="occurrences/search"]').length) return;
@@ -872,10 +870,10 @@ function processSpeciesJsonData(data, appendResults) {
     // add hover effect to table cell with scientific names
     $('#rightList tbody')
         .off('mouseenter.hoverCell mouseleave.hoverCell', 'tr')
-        .on('mouseenter.hoverCell', 'tr', function () {
+        .on('mouseenter.hoverCell', 'tr:not(#loadMoreSpecies):not(#info)', function () {
             $(this).addClass('hoverCell');
         })
-        .on('mouseleave.hoverCell', 'tr', function () {
+        .on('mouseleave.hoverCell', 'tr:not(#loadMoreSpecies):not(#info)', function () {
             $(this).removeClass('hoverCell');
         }
     );
